@@ -1,0 +1,27 @@
+{
+  "name": "vr-dos",
+  "version": "1.0.0",
+  "description": "MS-DOS in Virtual Reality",
+  "main": "index.html",
+  "scripts": {
+    "copydosbox": "shx rm -rf dist/*; mkdir -p ./dist/dos; shx cp ./node_modules/js-dos/dist/*dosbox* ./dist/dos/",
+    "start": "npm run copydosbox; parcel serve index.html --no-source-maps --https --open ",
+    "build": "npm run copydosbox; parcel build index.html --no-source-maps --public-url ./",
+    "deploy": "npm run build; gh-pages --dist dist;"
+  },
+  "author": "dextor@gmail.com",
+  "license": "ISC",
+  "homepage": "https://sonictruth.github.io/vr-dos/",
+  "devDependencies": {
+    "gh-pages": "^2.2.0",
+    "parcel": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.3.1",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "js-dos": "^6.22.59",
+    "three": "^0.115.0",
+    "webxr-polyfill": "^2.0.2"
+  }
+}
