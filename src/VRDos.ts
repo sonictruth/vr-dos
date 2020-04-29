@@ -16,12 +16,11 @@ import {
   FrontSide,
   MathUtils,
   Vector2,
-  Group,
   AnimationMixer,
   Clock,
-  AnimationActionLoopStyles,
   LoopOnce,
   AnimationClip,
+  Raycaster,
 } from 'three';
 
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -36,10 +35,14 @@ const Dos = (window as any).Dos as DosFactory;
 
 import Stats from 'stats.js';
 
+import keycode from 'keycode';
+
 enum GamePadAxis {
   x = 2,
   y = 3,
 }
+
+
 
 class VRDos {
   private scene: Scene | null = null;
@@ -55,9 +58,9 @@ class VRDos {
   private isDev = document.location.port === '1234';
   private oddFrame = false;
   private wdosBoxUrl = './dos/wdosbox.js';
-  private gamesArchiveUrl = 'https://js-dos.com/6.22/current/test/digger.zip';
+  private gameArchiveUrl = './pop.zip';
   private dosCanvas: HTMLCanvasElement = document.createElement('canvas');
-  private dosCycles: string | number = 1000;
+  private dosCycles: string | number = 'auto';
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
   private clock = new Clock();
@@ -86,16 +89,16 @@ class VRDos {
         const value = gamepad.axes[ai];
         if (ai === GamePadAxis.x) {
           if (value > this.pressThreshold) {
-            this.sendText('a ' + ai + ' dreapta');
+            this.sendCode('right');
           } else if (value < -this.pressThreshold) {
-            this.sendText('a ' + ai + ' stanga ');
+            this.sendCode('left');
           }
         }
         if (ai === GamePadAxis.y) {
           if (value > this.pressThreshold) {
-            this.sendText('a ' + ai + ' sus');
+            this.sendCode('down');
           } else if (value < -this.pressThreshold) {
-            this.sendText('a ' + ai + ' jos ');
+            this.sendCode('up');
           }
         }
       }
@@ -105,7 +108,13 @@ class VRDos {
           // https://www.w3.org/TR/webxr-gamepads-module-1/#xr-standard-gamepad-mapping
           // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
           // 0 1,  4 5 
-          this.sendText('b ' + bi + ' ');
+          if (bi === 3) {
+            this.sendText('prince.exe\r\n');
+          }
+          if (bi === 0) {
+
+            this.sendCode('enter');
+          }
         }
       }
     };
@@ -140,9 +149,6 @@ class VRDos {
         this.oddFrame = true;
       }
     }
-
-
-
 
     this.renderer?.render(<Scene>this.scene, <Camera>this.camera);
 
@@ -194,7 +200,6 @@ class VRDos {
   ): OrbitControls {
     const controls = new OrbitControls(camera, container);
     controls.target.copy(target);
-
     controls.update();
     return controls;
   }
@@ -218,6 +223,10 @@ class VRDos {
     text.split('').forEach(chr =>
       this.dosCommandInterface?.sendKeyPress(chr.charCodeAt(0))
     )
+  }
+
+  private sendCode(name: string) {
+    this.dosCommandInterface?.sendKeyPress(keycode(name));
   }
 
   private setupVRControllers() {
@@ -253,7 +262,7 @@ class VRDos {
 
       controllers.forEach(controller => {
         controller.addEventListener('connected', event => {
-          const cam = this.renderer?.xr.getCamera(<Camera>this.camera);
+
           const controller = <XRInputSource>event.data;
           if (controller.gamepad) {
             this.gamepads.push(controller.gamepad);
@@ -293,22 +302,49 @@ class VRDos {
       this.stats.showPanel(0);
       document.body.appendChild(this.stats.dom);
     }
-    const cameraPosition = new Vector3(0, .69, 0);
-    const orbitalTarget = new Vector3(0, .69, 0);
+    this.renderer = this.createRenderer();
+
+    //FIXME: When entering VR set the screen at the right height
+    //       For now move the whole scene
+
+    this.renderer.xr.addEventListener(
+      'sessionstart',
+      () => this.scene.position.set(0, -0.7, 0)
+    );
+
+    this.renderer.xr.addEventListener(
+      'sessionend',
+      () => this.scene.position.set(0, 0, 0)
+    );
+
+    this.renderer.domElement.addEventListener('click', (event) => {
+      this.sendText('prince.exe\r\n');
+    }, true);
+
+
+    const cameraPosition = new Vector3(0, .7, 0);
+    const orbitalTarget = new Vector3(0, .7, 0);
     const fov = 65;
     this.scene = this.createScene();
     this.camera = this.createCamera(fov, this.aspectRatio, cameraPosition);
+    this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget);
 
-    this.renderer = this.createRenderer();
     this.createLights().forEach(light => this.scene?.add(light));
 
     this.setupVRControllers();
 
     if (domElement) {
 
-      this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget);
       domElement.appendChild(this.renderer.domElement);
-      domElement.appendChild(VRButton.createButton(this.renderer));
+
+      domElement.appendChild(
+        VRButton.createButton(
+          this.renderer,
+          { referenceSpaceType: 'local' } // or local-floor
+        )
+      );
+
+
     } else {
       throw Error('Missing container dom element');
     }
@@ -325,7 +361,6 @@ class VRDos {
     if (roomScreenMesh) {
       this.dosTexture = new CanvasTexture(this.dosCanvas);
       await this.attachDosScreen(roomScreenMesh);
-      document.title = 'VR-DOS powered by JS-DOS';
     } else {
       throw new Error('Screen mesh not found' + this.screenMeshName);
     }
@@ -373,18 +408,35 @@ class VRDos {
     return <Promise<GLTF>>promise;
   }
 
-  private async bootDosGame() {
+  private async bootDosGame(url = this.gameArchiveUrl) {
     this.loading = true;
+    if (this.dosCommandInterface) {
+      this.dosCommandInterface.exit();
+      this.dosCommandInterface.dos.terminate();
+    }
     const dosRuntime = await Dos(this.dosCanvas,
       {
         cycles: this.dosCycles,
         wdosboxUrl: this.wdosBoxUrl
       });
-    await dosRuntime.fs.extract(this.gamesArchiveUrl);
+    await dosRuntime.fs.createFile(
+      'dosbox.conf',
+      `
+    [joystick]
+    joysticktype=none
+    [autoexec]
+    @ECHO OFF
+    echo -------------------------------
+    echo Hello, type prince.exe to start
+    echo -------------------------------
 
-    this.dosCommandInterface = await dosRuntime.main();
-    // this.dosCommandInterface.exit();
-    // this.dosCommandInterface.dos.terminate();
+
+    `);
+
+    await dosRuntime.fs.extract(url);
+
+    this.dosCommandInterface = await dosRuntime.main(['-conf', 'dosbox.conf']);
+    document.title = 'VR-DOS powered by JS-DOS';
     this.loading = false;
   }
 
@@ -392,7 +444,7 @@ class VRDos {
     canvas: HTMLCanvasElement,
     texture: CanvasTexture
   ) {
-    // Other possible fixes:
+    // Other possible fixes for not power of 2 textures:
     // this.dosTexture.minFilter = LinearFilter; // looks ugly
     // or use WebGL 2 // Not supported by Safari
     if (!MathUtils.isPowerOfTwo(canvas.width)) {
@@ -411,7 +463,7 @@ class VRDos {
       map: this.dosTexture,
     });
 
-    // FIXME: Find a way to resize and position realScreen
+    // TODO: Resize and position realScreen
     //        automatically relative to dosScreen 
     const geo = new PlaneBufferGeometry(.245, .23);
     const realScreen = new Mesh(geo, material);
