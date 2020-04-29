@@ -114,6 +114,7 @@ class VRDos {
   render() {
 
     const dosTexture = <CanvasTexture>this.dosTexture;
+    this.fixTextureSize(this.dosCanvas, dosTexture);
 
     if (this.animationMixer) {
       const deltaTime = this.clock.getDelta();
@@ -122,18 +123,17 @@ class VRDos {
 
     if (this.loading) {
       const ctx = <CanvasRenderingContext2D>this.dosCanvas.getContext('2d');
-      ctx.font = `30px 'VT323', monospace`;
+      ctx.font = `20px 'VT323', monospace`;
       ctx.fillStyle = 'green';
-      ctx.textAlign = "center";
+      ctx.textAlign = 'left';
       ctx.fillText(
-        'Loading...',
-        this.dosCanvas.width / 2, this.dosCanvas.height / 2
+        'Booting...',
+        10, 40
       );
       dosTexture.needsUpdate = false;
     } else {
       this.processGamepadsInputs();
       if (this.oddFrame) {
-        this.fixTextureSize(this.dosCanvas, dosTexture);
         dosTexture.needsUpdate = true;
         this.oddFrame = false;
       } else {
