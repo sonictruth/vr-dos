@@ -13,6 +13,7 @@
   "license": "ISC",
   "homepage": "https://sonictruth.github.io/vr-dos/",
   "devDependencies": {
+    "@types/stats.js": "^0.17.0",
     "gh-pages": "^2.2.0",
     "parcel": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
@@ -20,7 +21,9 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@webxr-input-profiles/motion-controllers": "^1.0.0",
     "js-dos": "^6.22.59",
+    "stats.js": "^0.17.0",
     "three": "^0.115.0",
     "webxr-polyfill": "^2.0.2"
   }

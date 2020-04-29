@@ -4,14 +4,32 @@ html,
 body,
 #main {
   font-family: 'VT323', monospace;
-  font-size: 1.5em;
+  font-size: 20px;
   padding: 0;
   margin: 0;
   height: 100%;
-  background-color: black;
+  background-color: #202020;
   color: green;
 }
+#help {
+  border-radius: 10px;
+  background-color: black;
+  position: absolute;
+  left: 20%;
+  width: 60%;
+  top: 10px;
+  padding: 20px;
+  display: none;
+}
 
+#spinner{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+}
 #main {
   display: block;
   cursor: grab;
@@ -20,12 +38,14 @@ body,
 #spinner {
   display: none;
 }
+#spinner div{
+  padding-left: 20px;
+}
 
-.loading #main {
+.loading #main, .loading #help {
   display: none;
 }
 
 .loading #spinner {
   display: block;
 }
-
