@@ -201,7 +201,7 @@ class VRDos {
 
   private createLights(): Light[] {
     var light = new DirectionalLight(0xFFFFFF);
-    light.position.set(3, 3, 3)
+    light.position.set(3, 5, 3)
     const alight = new AmbientLight(0xFFFFFF, 0.2)
     return [light, alight];
   }
@@ -293,8 +293,8 @@ class VRDos {
       this.stats.showPanel(0);
       document.body.appendChild(this.stats.dom);
     }
-    const cameraPosition = new Vector3(0, .75, 0);
-    const orbitalTarget = new Vector3(0, .75, 0);
+    const cameraPosition = new Vector3(0, .69, 0);
+    const orbitalTarget = new Vector3(0, .69, 0);
     const fov = 65;
     this.scene = this.createScene();
     this.camera = this.createCamera(fov, this.aspectRatio, cameraPosition);
