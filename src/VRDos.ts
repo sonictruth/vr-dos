@@ -61,6 +61,7 @@ class VRDos {
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
   private clock = new Clock();
+  private loading = true;
 
   get devicePixelRatio(): number {
     return window.devicePixelRatio;
@@ -111,23 +112,40 @@ class VRDos {
   }
 
   render() {
+
+    const dosTexture = <CanvasTexture>this.dosTexture;
+
     if (this.animationMixer) {
       const deltaTime = this.clock.getDelta();
       this.animationMixer.update(deltaTime);
     }
-    if (this.renderer && this.scene && this.camera) {
+
+    if (this.loading) {
+      const ctx = <CanvasRenderingContext2D>this.dosCanvas.getContext('2d');
+      ctx.font = `30px 'VT323', monospace`;
+      ctx.fillStyle = 'green';
+      ctx.textAlign = "center";
+      ctx.fillText(
+        'Loading...',
+        this.dosCanvas.width / 2, this.dosCanvas.height / 2
+      );
+      dosTexture.needsUpdate = false;
+    } else {
       this.processGamepadsInputs();
-      if (this.oddFrame && this.dosTexture) {
-        this.fixTextureSize(this.dosCanvas, this.dosTexture)
-        this.dosTexture.needsUpdate = true;
+      if (this.oddFrame) {
+        this.fixTextureSize(this.dosCanvas, dosTexture);
+        dosTexture.needsUpdate = true;
         this.oddFrame = false;
       } else {
         this.oddFrame = true;
       }
-      this.renderer.render(this.scene, this.camera);
-    } else {
-      throw Error('Not initialized properly');
     }
+
+
+
+
+    this.renderer?.render(<Scene>this.scene, <Camera>this.camera);
+
     if (this.isDev) {
       this.stats.update();
     }
@@ -307,7 +325,6 @@ class VRDos {
     if (roomScreenMesh) {
       this.dosTexture = new CanvasTexture(this.dosCanvas);
       await this.attachDosScreen(roomScreenMesh);
-      // await this.bootDosGame();
       document.title = 'VR-DOS powered by JS-DOS';
     } else {
       throw new Error('Screen mesh not found' + this.screenMeshName);
@@ -325,7 +342,8 @@ class VRDos {
 
   private async playIntro() {
     return new Promise((resolve) => {
-      if (this.scene) {
+      if (this.scene && this.dosCanvas) {
+
         const mixer = this.animationMixer = new AnimationMixer(this.scene);
         const introClip = this.animationClips[0];
         const action = mixer.clipAction(introClip);
@@ -356,7 +374,7 @@ class VRDos {
   }
 
   private async bootDosGame() {
-
+    this.loading = true;
     const dosRuntime = await Dos(this.dosCanvas,
       {
         cycles: this.dosCycles,
@@ -367,7 +385,7 @@ class VRDos {
     this.dosCommandInterface = await dosRuntime.main();
     // this.dosCommandInterface.exit();
     // this.dosCommandInterface.dos.terminate();
-
+    this.loading = false;
   }
 
   private fixTextureSize(
@@ -377,7 +395,6 @@ class VRDos {
     // Other possible fixes:
     // this.dosTexture.minFilter = LinearFilter; // looks ugly
     // or use WebGL 2 // Not supported by Safari
-
     if (!MathUtils.isPowerOfTwo(canvas.width)) {
       canvas.width = MathUtils.ceilPowerOfTwo(canvas.width);
       canvas.height = MathUtils.ceilPowerOfTwo(canvas.height);
