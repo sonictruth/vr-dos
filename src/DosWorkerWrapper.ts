@@ -7,9 +7,9 @@ import {
 import { Xhr } from 'js-dos/js-dos-ts/js-dos-xhr'
 import CacheNoop from 'js-dos/js-dos-ts/js-dos-cache-noop';
 
-class Dos {
-  private workerUrl = './wdosbox-emterp.worker.js';
+class DosWorkerWrapper {
   private zipUrl: string = '';
+  private workerUrl = './wdosbox-emterp.worker.js';
   private home = '/home/web_user/';
   private canvas: HTMLCanvasElement;
   private renderFrameData: ArrayLike<number> | null = null;
@@ -279,4 +279,4 @@ class Dos {
 }
 
 
-export default Dos;
+export default DosWorkerWrapper;

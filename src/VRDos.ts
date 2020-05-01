@@ -33,7 +33,7 @@ import Stats from 'stats.js';
 
 import keycode from 'keycode';
 
-import Dos from './Dos';
+import DosWorkerWrapper from './DosWorkerWrapper';
 
 enum GamePadAxis {
   x = 2,
@@ -56,7 +56,7 @@ class VRDos {
 
 
   private dosCanvas: HTMLCanvasElement = document.createElement('canvas');
-  private dos = new Dos(this.dosCanvas);
+  private dos = new DosWorkerWrapper(this.dosCanvas);
 
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
