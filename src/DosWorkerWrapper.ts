@@ -9,7 +9,7 @@ import CacheNoop from 'js-dos/js-dos-ts/js-dos-cache-noop';
 
 class DosWorkerWrapper {
   private zipUrl: string = '';
-  private workerUrl = './wdosbox-emterp.worker.js';
+  private workerUrl = 'wdosbox-emterp.worker.js';
   private home = '/home/web_user/';
   private canvas: HTMLCanvasElement;
   private renderFrameData: ArrayLike<number> | null = null;
@@ -230,8 +230,9 @@ class DosWorkerWrapper {
     if (this.renderFrameData) {
       if (dst?.set) {
         dst.set(this.renderFrameData);
-      } else {
-        for (var i = 0; i < this.renderFrameData.length; i++) {
+      } else {    
+        for (var i = 0; i < this.renderFrameData.length; i++) { 
+          // @ts-ignore
           dst[i] = this.renderFrameData[i];
         }
       }

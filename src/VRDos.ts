@@ -54,14 +54,13 @@ class VRDos {
   private isDev = document.location.port === '1234';
   private oddFrame = false;
 
-
   private dosCanvas: HTMLCanvasElement = document.createElement('canvas');
   private dos = new DosWorkerWrapper(this.dosCanvas);
 
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
   private clock = new Clock();
-  private loading = true;
+  private isLoading = true;
   private startGameCmd = 'prince.exe\r\n';
 
 
@@ -79,6 +78,25 @@ class VRDos {
 
   get aspectRatio(): number {
     return (this.width / this.height)
+  }
+
+  private setLoading(
+    loading: boolean,
+    text: string = 'Loading...'
+  ) {
+    const ctx = this.dosCanvas.getContext('2d');
+    if (loading) {
+      if (ctx && this.dosTexture) {
+        ctx.font = 'bold 15px Verdana';
+        ctx.fillStyle = 'green';
+        ctx.fillText(text, 20, 20);
+        this.dosTexture.needsUpdate = true;
+      }
+      this.isLoading = loading;
+    } else {
+      this.isLoading = loading;
+    };
+
   }
 
   private processGamepadsInputs() {
@@ -129,7 +147,7 @@ class VRDos {
       this.animationMixer.update(deltaTime);
     }
 
-    if (!this.loading) {
+    if (!this.isLoading) {
       this.processGamepadsInputs();
       if (this.oddFrame) {
         dosTexture.needsUpdate = true;
@@ -292,29 +310,30 @@ class VRDos {
     this.renderer = this.createRenderer();
 
     //FIXME: Rethink this crap
-    this.renderer.domElement.addEventListener('touchstart', (event) => {
-      this.sendText(this.startGameCmd);
-    }, true);
-
-    this.renderer.domElement.addEventListener('click', (event) => {
-      this.sendText(this.startGameCmd);
-    }, true);
     /*
-    this.renderer.xr.addEventListener(
-      'sessionstart',
-      () =>  {
-        console.log(this.scene);
-        this.scene.getObjectByName('Root').position.y = .8;
-      }
-    );
-    this.renderer.xr.addEventListener(
-      'sessionend',
-      () =>  {
-        console.log(this.scene);
-        this.scene.getObjectByName('Root').position.y = 0;
-      }
-    );
-    */
+  this.renderer.domElement.addEventListener('touchstart', (event) => {
+    this.sendText(this.startGameCmd);
+  }, true);
+
+  this.renderer.domElement.addEventListener('click', (event) => {
+    this.sendText(this.startGameCmd);
+  }, true);
+ 
+  this.renderer.xr.addEventListener(
+    'sessionstart',
+    () =>  {
+      console.log(this.scene);
+      this.scene.getObjectByName('Root').position.y = .8;
+    }
+  );
+  this.renderer.xr.addEventListener(
+    'sessionend',
+    () =>  {
+      console.log(this.scene);
+      this.scene.getObjectByName('Root').position.y = 0;
+    }
+  );
+  */
 
 
 
@@ -347,7 +366,7 @@ class VRDos {
     }
     window.addEventListener('resize', this.handleResize.bind(this));
 
-    const roomGLTF = await this.loadGLTF('./room.glb');
+    const roomGLTF = await this.loadGLTF('room.glb');
     const roomMesh = <Mesh>roomGLTF.scene.children[0];
     this.scene.add(roomMesh);
 
@@ -365,8 +384,8 @@ class VRDos {
     this.renderer.setAnimationLoop(this.render.bind(this));
     this.initialized = true;
     (async () => {
+      this.setLoading(true, `Please wait...`);
       await this.playIntro();
-      console.log('Booting...');
       this.bootDosGame();
     })();
 
@@ -405,10 +424,10 @@ class VRDos {
     return <Promise<GLTF>>promise;
   }
 
-  private async bootDosGame() {
-    this.loading = true;
-    this.dos.run('pop.zip');
-    this.loading = false;
+  private async bootDosGame(archiveUrl = 'pop.zip') {
+    this.setLoading(true, `Booting ${archiveUrl}`);
+    await this.dos.run(archiveUrl);
+    this.setLoading(false);
   }
 
   private fixTextureSize(
