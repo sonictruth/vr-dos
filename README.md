@@ -2,8 +2,7 @@
 
 http://sonictruth.github.io/vr-dos/
 
-3D Model by https://sketchfab.com/railek
+Compiled js-dos version of dosbox to run as a webworker so the main thread will have more power for VR.
+Because of that there is no sound.
 
-TODO:
-- Add Gamepad and key controls
-- Add way to change games
+3D Model by https://sketchfab.com/railek

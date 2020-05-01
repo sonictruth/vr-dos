@@ -28,20 +28,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
-import { DosFactory } from 'js-dos';
-import 'js-dos';
-import { DosCommandInterface } from 'js-dos/dist/typescript/js-dos-ci';
-const Dos = (window as any).Dos as DosFactory;
 
 import Stats from 'stats.js';
 
 import keycode from 'keycode';
 
+import Dos from './Dos';
+
 enum GamePadAxis {
   x = 2,
   y = 3,
 }
-
 
 
 class VRDos {
@@ -50,21 +47,23 @@ class VRDos {
   private renderer: WebGLRenderer | null = null;
   private dosTexture: CanvasTexture | null = null;
   private initialized = false;
-  private dosCommandInterface: DosCommandInterface | null = null;
   private screenMeshName = 'SM_Monitor_Screen_0';
   private gamepads: Gamepad[] = [];
   private pressThreshold = .5;
   private stats = new Stats();
   private isDev = document.location.port === '1234';
   private oddFrame = false;
-  private wdosBoxUrl = './dos/wdosbox.js';
-  private gameArchiveUrl = './pop.zip';
+
+
   private dosCanvas: HTMLCanvasElement = document.createElement('canvas');
-  private dosCycles: string | number = 'auto';
+  private dos = new Dos(this.dosCanvas);
+
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
   private clock = new Clock();
   private loading = true;
+  private startGameCmd = 'prince.exe\r\n';
+
 
   get devicePixelRatio(): number {
     return window.devicePixelRatio;
@@ -109,7 +108,7 @@ class VRDos {
           // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
           // 0 1,  4 5 
           if (bi === 3) {
-            this.sendText('prince.exe\r\n');
+            this.sendText(this.startGameCmd);
           }
           if (bi === 0) {
 
@@ -130,17 +129,7 @@ class VRDos {
       this.animationMixer.update(deltaTime);
     }
 
-    if (this.loading) {
-      const ctx = <CanvasRenderingContext2D>this.dosCanvas.getContext('2d');
-      ctx.font = `20px 'VT323', monospace`;
-      ctx.fillStyle = 'green';
-      ctx.textAlign = 'left';
-      ctx.fillText(
-        'Booting...',
-        10, 40
-      );
-      dosTexture.needsUpdate = false;
-    } else {
+    if (!this.loading) {
       this.processGamepadsInputs();
       if (this.oddFrame) {
         dosTexture.needsUpdate = true;
@@ -220,13 +209,11 @@ class VRDos {
   }
 
   private sendText(text: string) {
-    text.split('').forEach(chr =>
-      this.dosCommandInterface?.sendKeyPress(chr.charCodeAt(0))
-    )
+
   }
 
   private sendCode(name: string) {
-    this.dosCommandInterface?.sendKeyPress(keycode(name));
+
   }
 
   private setupVRControllers() {
@@ -304,22 +291,32 @@ class VRDos {
     }
     this.renderer = this.createRenderer();
 
-    //FIXME: When entering VR set the screen at the right height
-    //       For now move the whole scene
-
-    this.renderer.xr.addEventListener(
-      'sessionstart',
-      () => this.scene.position.set(0, -0.7, 0)
-    );
-
-    this.renderer.xr.addEventListener(
-      'sessionend',
-      () => this.scene.position.set(0, 0, 0)
-    );
+    //FIXME: Rethink this crap
+    this.renderer.domElement.addEventListener('touchstart', (event) => {
+      this.sendText(this.startGameCmd);
+    }, true);
 
     this.renderer.domElement.addEventListener('click', (event) => {
-      this.sendText('prince.exe\r\n');
+      this.sendText(this.startGameCmd);
     }, true);
+    /*
+    this.renderer.xr.addEventListener(
+      'sessionstart',
+      () =>  {
+        console.log(this.scene);
+        this.scene.getObjectByName('Root').position.y = .8;
+      }
+    );
+    this.renderer.xr.addEventListener(
+      'sessionend',
+      () =>  {
+        console.log(this.scene);
+        this.scene.getObjectByName('Root').position.y = 0;
+      }
+    );
+    */
+
+
 
 
     const cameraPosition = new Vector3(0, .7, 0);
@@ -340,7 +337,7 @@ class VRDos {
       domElement.appendChild(
         VRButton.createButton(
           this.renderer,
-          { referenceSpaceType: 'local' } // or local-floor
+          // { referenceSpaceType: 'local' } 
         )
       );
 
@@ -408,35 +405,9 @@ class VRDos {
     return <Promise<GLTF>>promise;
   }
 
-  private async bootDosGame(url = this.gameArchiveUrl) {
+  private async bootDosGame() {
     this.loading = true;
-    if (this.dosCommandInterface) {
-      this.dosCommandInterface.exit();
-      this.dosCommandInterface.dos.terminate();
-    }
-    const dosRuntime = await Dos(this.dosCanvas,
-      {
-        cycles: this.dosCycles,
-        wdosboxUrl: this.wdosBoxUrl
-      });
-    await dosRuntime.fs.createFile(
-      'dosbox.conf',
-      `
-    [joystick]
-    joysticktype=none
-    [autoexec]
-    @ECHO OFF
-    echo -------------------------------
-    echo Hello, type prince.exe to start
-    echo -------------------------------
-
-
-    `);
-
-    await dosRuntime.fs.extract(url);
-
-    this.dosCommandInterface = await dosRuntime.main(['-conf', 'dosbox.conf']);
-    document.title = 'VR-DOS powered by JS-DOS';
+    this.dos.run('pop.zip');
     this.loading = false;
   }
 
