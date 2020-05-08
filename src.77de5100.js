@@ -39698,9 +39698,9 @@ var js_dos_cache_noop_1 = __importDefault(require("js-dos/js-dos-ts/js-dos-cache
 var DosWorkerWrapper =
 /** @class */
 function () {
-  function DosWorkerWrapper(canvas) {
+  function DosWorkerWrapper(canvas, texture) {
     this.zipUrl = '';
-    this.workerUrl = './wdosbox-emterp.worker.js';
+    this.workerUrl = 'wdosbox-emterp.worker.js';
     this.home = '/home/web_user/';
     this.renderFrameData = null;
     this.ctx = null;
@@ -39713,6 +39713,7 @@ function () {
     this.startedPromise = function () {};
 
     this.canvas = canvas;
+    this.texture = texture;
     this.handleWorkerMessage = this.handleWorkerMessage.bind(this);
     this.attachEvents();
   }
@@ -39841,7 +39842,7 @@ function () {
                 } else {
                   // previous image was rendered so update image and request another frame
                   this.renderFrameData = data.image.data;
-                  window.requestAnimationFrame(this.renderFrame.bind(this));
+                  setTimeout(this.renderFrame.bind(this)); // this.renderFrame();
                 }
 
                 break;
@@ -40037,6 +40038,7 @@ function () {
 
     if (this.renderFrameData) {
       if (dst === null || dst === void 0 ? void 0 : dst.set) {
+        this.texture.needsUpdate = true;
         dst.set(this.renderFrameData);
       } else {
         for (var i = 0; i < this.renderFrameData.length; i++) {
@@ -40280,21 +40282,19 @@ function () {
     this.scene = null;
     this.camera = null;
     this.renderer = null;
-    this.dosTexture = null;
     this.initialized = false;
     this.screenMeshName = 'SM_Monitor_Screen_0';
     this.gamepads = [];
     this.pressThreshold = .5;
     this.stats = new stats_js_1.default();
     this.isDev = document.location.port === '1234';
-    this.oddFrame = false;
     this.dosCanvas = document.createElement('canvas');
-    this.dos = new DosWorkerWrapper_1.default(this.dosCanvas);
+    this.dosTexture = new three_1.CanvasTexture(this.dosCanvas);
+    this.dos = new DosWorkerWrapper_1.default(this.dosCanvas, this.dosTexture);
     this.animationMixer = null;
     this.animationClips = [];
     this.clock = new three_1.Clock();
     this.isLoading = true;
-    this.startGameCmd = 'prince.exe\r\n';
   }
 
   Object.defineProperty(VRDos.prototype, "devicePixelRatio", {
@@ -40338,7 +40338,6 @@ function () {
         ctx.font = 'bold 15px Verdana';
         ctx.fillStyle = 'green';
         ctx.fillText(text, 20, 20);
-        this.dosTexture.needsUpdate = true;
       }
 
       this.isLoading = loading;
@@ -40380,12 +40379,10 @@ function () {
           // https://www.w3.org/TR/webxr-gamepads-module-1/#xr-standard-gamepad-mapping
           // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
           // 0 1,  4 5 
-          if (bi === 3) {
-            this.sendText(this.startGameCmd);
+          if (bi === 3) {//this.sendText(this.startGameCmd);
           }
 
-          if (bi === 0) {
-            this.sendCode('enter');
+          if (bi === 0) {//this.sendCode('enter');
           }
         }
       }
@@ -40397,23 +40394,14 @@ function () {
   VRDos.prototype.render = function () {
     var _a;
 
-    var dosTexture = this.dosTexture;
-    this.fixTextureSize(this.dosCanvas, dosTexture);
-
     if (this.animationMixer) {
       var deltaTime = this.clock.getDelta();
       this.animationMixer.update(deltaTime);
     }
 
     if (!this.isLoading) {
+      this.fixTextureSize(this.dosCanvas, this.dosTexture);
       this.processGamepadsInputs();
-
-      if (this.oddFrame) {
-        dosTexture.needsUpdate = true;
-        this.oddFrame = false;
-      } else {
-        this.oddFrame = true;
-      }
     }
 
     (_a = this.renderer) === null || _a === void 0 ? void 0 : _a.render(this.scene, this.camera);
@@ -40522,7 +40510,7 @@ function () {
 
           if (controller.gamepad) {
             _this.gamepads.push(controller.gamepad);
-          } // controller0.add(<Object3D>buildController(event.data));
+          } // controller.add(<Object3D>buildController(event.data));
 
         });
         controller.addEventListener('disconnected', function (event) {
@@ -40599,7 +40587,6 @@ function () {
             if (!roomScreenMesh) return [3
             /*break*/
             , 3];
-            this.dosTexture = new three_1.CanvasTexture(this.dosCanvas);
             return [4
             /*yield*/
             , this.attachDosScreen(roomScreenMesh)];
@@ -40699,7 +40686,7 @@ function () {
             this.setLoading(true, "Booting " + archiveUrl);
             return [4
             /*yield*/
-            , this.dos.run(archiveUrl)];
+            , this.dos.run(archiveUrl, ['-c', 'prince.exe'])];
 
           case 1:
             _a.sent();
@@ -49704,7 +49691,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52309" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52303" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
