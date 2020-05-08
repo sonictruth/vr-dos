@@ -6,6 +6,7 @@ import {
 
 import { Xhr } from 'js-dos/js-dos-ts/js-dos-xhr'
 import CacheNoop from 'js-dos/js-dos-ts/js-dos-cache-noop';
+import { CanvasTexture } from 'three';
 
 class DosWorkerWrapper {
   private zipUrl: string = '';
@@ -20,10 +21,12 @@ class DosWorkerWrapper {
   private rpcPromises = <any>{};
   private commands: string[] = [];
   private startedPromise = () => {};
+  private texture: CanvasTexture;
 
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, texture: CanvasTexture) {
     this.canvas = canvas;
+    this.texture = texture;
     this.handleWorkerMessage = this.handleWorkerMessage.bind(this);
     this.attachEvents();
   }
@@ -113,7 +116,9 @@ class DosWorkerWrapper {
             } else {
               // previous image was rendered so update image and request another frame
               this.renderFrameData = data.image.data;
-              window.requestAnimationFrame(this.renderFrame.bind(this));
+
+              setTimeout(this.renderFrame.bind(this));
+              // this.renderFrame();
             }
             break;
           }
@@ -177,6 +182,7 @@ class DosWorkerWrapper {
         bytes
       );
     }
+ 
     const args = ['run', '-c', 'mount c .', '-c', 'c:', ...this.commands];
     await this.callWorker.apply(this, args);
     this.startedPromise();
@@ -225,12 +231,14 @@ class DosWorkerWrapper {
     console.error(message);
   }
   private renderFrame() {
+
     const dst = this.imageData?.data;
 
     if (this.renderFrameData) {
       if (dst?.set) {
+        this.texture.needsUpdate = true;
         dst.set(this.renderFrameData);
-      } else {    
+      } else {   
         for (var i = 0; i < this.renderFrameData.length; i++) { 
           // @ts-ignore
           dst[i] = this.renderFrameData[i];

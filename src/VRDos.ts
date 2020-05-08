@@ -45,23 +45,24 @@ class VRDos {
   private scene: Scene | null = null;
   private camera: PerspectiveCamera | null = null;
   private renderer: WebGLRenderer | null = null;
-  private dosTexture: CanvasTexture | null = null;
+
   private initialized = false;
   private screenMeshName = 'SM_Monitor_Screen_0';
   private gamepads: Gamepad[] = [];
   private pressThreshold = .5;
   private stats = new Stats();
   private isDev = document.location.port === '1234';
-  private oddFrame = false;
 
-  private dosCanvas: HTMLCanvasElement = document.createElement('canvas');
-  private dos = new DosWorkerWrapper(this.dosCanvas);
+  private dosCanvas = document.createElement('canvas');
+  
+  private dosTexture = new CanvasTexture(this.dosCanvas);
+
+  private dos = new DosWorkerWrapper(this.dosCanvas, this.dosTexture);
 
   private animationMixer: AnimationMixer | null = null;
   private animationClips: AnimationClip[] = [];
   private clock = new Clock();
   private isLoading = true;
-  private startGameCmd = 'prince.exe\r\n';
 
 
   get devicePixelRatio(): number {
@@ -90,7 +91,6 @@ class VRDos {
         ctx.font = 'bold 15px Verdana';
         ctx.fillStyle = 'green';
         ctx.fillText(text, 20, 20);
-        this.dosTexture.needsUpdate = true;
       }
       this.isLoading = loading;
     } else {
@@ -126,11 +126,11 @@ class VRDos {
           // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
           // 0 1,  4 5 
           if (bi === 3) {
-            this.sendText(this.startGameCmd);
+            //this.sendText(this.startGameCmd);
           }
           if (bi === 0) {
 
-            this.sendCode('enter');
+            //this.sendCode('enter');
           }
         }
       }
@@ -139,22 +139,14 @@ class VRDos {
 
   render() {
 
-    const dosTexture = <CanvasTexture>this.dosTexture;
-    this.fixTextureSize(this.dosCanvas, dosTexture);
-
     if (this.animationMixer) {
       const deltaTime = this.clock.getDelta();
       this.animationMixer.update(deltaTime);
     }
 
-    if (!this.isLoading) {
+    if(!this.isLoading) {
+      this.fixTextureSize(this.dosCanvas, this.dosTexture);
       this.processGamepadsInputs();
-      if (this.oddFrame) {
-        dosTexture.needsUpdate = true;
-        this.oddFrame = false;
-      } else {
-        this.oddFrame = true;
-      }
     }
 
     this.renderer?.render(<Scene>this.scene, <Camera>this.camera);
@@ -272,7 +264,7 @@ class VRDos {
           if (controller.gamepad) {
             this.gamepads.push(controller.gamepad);
           }
-          // controller0.add(<Object3D>buildController(event.data));
+          // controller.add(<Object3D>buildController(event.data));
         });
         controller.addEventListener('disconnected', event => {
           const controller = <XRInputSource>event.data;
@@ -309,35 +301,6 @@ class VRDos {
     }
     this.renderer = this.createRenderer();
 
-    //FIXME: Rethink this crap
-    /*
-  this.renderer.domElement.addEventListener('touchstart', (event) => {
-    this.sendText(this.startGameCmd);
-  }, true);
-
-  this.renderer.domElement.addEventListener('click', (event) => {
-    this.sendText(this.startGameCmd);
-  }, true);
- 
-  this.renderer.xr.addEventListener(
-    'sessionstart',
-    () =>  {
-      console.log(this.scene);
-      this.scene.getObjectByName('Root').position.y = .8;
-    }
-  );
-  this.renderer.xr.addEventListener(
-    'sessionend',
-    () =>  {
-      console.log(this.scene);
-      this.scene.getObjectByName('Root').position.y = 0;
-    }
-  );
-  */
-
-
-
-
     const cameraPosition = new Vector3(0, .7, 0);
     const orbitalTarget = new Vector3(0, .7, 0);
     const fov = 65;
@@ -356,7 +319,7 @@ class VRDos {
       domElement.appendChild(
         VRButton.createButton(
           this.renderer,
-          // { referenceSpaceType: 'local' } 
+       //   { referenceSpaceType: 'viewer' } 
         )
       );
 
@@ -375,7 +338,8 @@ class VRDos {
     const roomScreenMesh = <Mesh>this.scene.getObjectByName(this.screenMeshName);
 
     if (roomScreenMesh) {
-      this.dosTexture = new CanvasTexture(this.dosCanvas);
+    
+
       await this.attachDosScreen(roomScreenMesh);
     } else {
       throw new Error('Screen mesh not found' + this.screenMeshName);
@@ -426,7 +390,7 @@ class VRDos {
 
   private async bootDosGame(archiveUrl = 'pop.zip') {
     this.setLoading(true, `Booting ${archiveUrl}`);
-    await this.dos.run(archiveUrl);
+    await this.dos.run(archiveUrl, ['-c', 'prince.exe']);
     this.setLoading(false);
   }
 
