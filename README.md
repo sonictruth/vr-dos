@@ -3,11 +3,8 @@
 http://sonictruth.github.io/vr-dos/
 
 This is a full DOS emulator inside a VR environment.
-
 To achive this I modified js-dos to be able to compile it it as a Web Worker.
-
 This way the main thread will have enough power for VR rendering.
-
 To show the emulator inside VR i'm using CanvasTexture.
 
 ![](demo.gif)
@@ -15,7 +12,6 @@ To show the emulator inside VR i'm using CanvasTexture.
 ## Keys
 
 On PC you can use your keyboard to control the PC and mouse to look around.
-
 In VR this are the default mappings (tested with Oculus Quest):
 
 0: [Key.Enter], // Trigger
