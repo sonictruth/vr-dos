@@ -3,9 +3,10 @@
 http://sonictruth.github.io/vr-dos/
 
 This is a full DOS emulator inside a VR environment.
-To achive this I modified js-dos to be able to compile it it as a Web Worker.
+To achive this I modified js-dos to be able to compile it as a Web Worker.
 This way the main thread will have enough power for VR rendering.
-To show the emulator inside VR i'm using CanvasTexture.
+
+The VR environment was built using Three.js and the emulator is rendered inside the world using CanvasTexture.
 
 ![](demo.gif)
 
