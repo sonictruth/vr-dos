@@ -21,6 +21,8 @@ import {
   LoopOnce,
   AnimationClip,
   Raycaster,
+  ArrayCamera,
+  Group,
 } from 'three';
 
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -28,10 +30,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
-
 import Stats from 'stats.js';
 
-import keycode from 'keycode';
+import { Key } from 'ts-keycode-enum';
 
 import DosWorkerWrapper from './DosWorkerWrapper';
 
@@ -39,6 +40,8 @@ enum GamePadAxis {
   x = 2,
   y = 3,
 }
+
+
 
 
 class VRDos {
@@ -54,7 +57,7 @@ class VRDos {
   private isDev = document.location.port === '1234';
 
   private dosCanvas = document.createElement('canvas');
-  
+
   private dosTexture = new CanvasTexture(this.dosCanvas);
 
   private dos = new DosWorkerWrapper(this.dosCanvas, this.dosTexture);
@@ -64,6 +67,17 @@ class VRDos {
   private clock = new Clock();
   private isLoading = true;
 
+  private userHeight = 0;
+  private keyStatus: { [code: number]: string; } = {};
+
+  private gamePadButtonMap: { [vrButtonIndex: number]: number[]; } = {
+    0: [Key.Enter], // Trigger
+    1: [Key.Shift], // Sqeeze
+    3: [Key.Ctrl], // Joy fire
+    4: [Key.Space, Key.Shift, Key.Ctrl], // A
+    5: [Key.Ctrl, Key.Q, Key.Escape]  // B
+  }
+  vrUser: Group = new Group();
 
   get devicePixelRatio(): number {
     return window.devicePixelRatio;
@@ -88,9 +102,11 @@ class VRDos {
     const ctx = this.dosCanvas.getContext('2d');
     if (loading) {
       if (ctx && this.dosTexture) {
+        this.dosCanvas.width = 512;
+        this.dosCanvas.height = 512;
         ctx.font = 'bold 15px Verdana';
         ctx.fillStyle = 'green';
-        ctx.fillText(text, 20, 20);
+        ctx.fillText(text, 40, 40);
       }
       this.isLoading = loading;
     } else {
@@ -99,52 +115,76 @@ class VRDos {
 
   }
 
+  private emulateKeyEvent(code: number, type: 'keydown' | 'keyup') {
+    if (!this.keyStatus[code] && type === 'keydown') {
+      this.dos.sendKey(code, type);
+      this.keyStatus[code] = type;
+    } else if (this.keyStatus[code] === 'keydown' && type === 'keyup') {
+      this.dos.sendKey(code, type);
+      delete this.keyStatus[code];
+    }
+  }
+
+
   private processGamepadsInputs() {
-    for (let i = 0; i < this.gamepads.length; i++) {
-      const gamepad = this.gamepads[i];
+      if (this.gamepads.length === 0) {
+        return;
+      }
+      const gamepad = this.gamepads[this.gamepads.length-1];
+      
+      // Joystick
       for (let ai = 0; ai < gamepad.axes.length; ai++) {
         const value = gamepad.axes[ai];
         if (ai === GamePadAxis.x) {
           if (value > this.pressThreshold) {
-            this.sendCode('right');
+            this.emulateKeyEvent(Key.RightArrow, 'keydown');
           } else if (value < -this.pressThreshold) {
-            this.sendCode('left');
+            this.emulateKeyEvent(Key.LeftArrow, 'keydown');
+          } else {
+            this.emulateKeyEvent(Key.RightArrow, 'keyup');
+            this.emulateKeyEvent(Key.LeftArrow, 'keyup');
           }
         }
         if (ai === GamePadAxis.y) {
           if (value > this.pressThreshold) {
-            this.sendCode('down');
+            this.emulateKeyEvent(Key.DownArrow, 'keydown');
           } else if (value < -this.pressThreshold) {
-            this.sendCode('up');
+            this.emulateKeyEvent(Key.UpArrow, 'keydown');
+          } else {
+            this.emulateKeyEvent(Key.UpArrow, 'keyup');
+            this.emulateKeyEvent(Key.DownArrow, 'keyup');
           }
         }
       }
+      // Buttons
       for (let bi = 0; bi < gamepad.buttons.length; bi++) {
         const button = gamepad.buttons[bi];
-        if (button.pressed) {
-          // https://www.w3.org/TR/webxr-gamepads-module-1/#xr-standard-gamepad-mapping
-          // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
-          // 0 1,  4 5 
-          if (bi === 3) {
-            //this.sendText(this.startGameCmd);
-          }
-          if (bi === 0) {
-
-            //this.sendCode('enter');
-          }
+        const map = this.gamePadButtonMap[bi];
+        if(map){
+          map.forEach(key => {
+            const action = button.pressed ? 'keydown': 'keyup';
+            this.emulateKeyEvent(key, action);
+          });
         }
-      }
     };
   }
 
-  render() {
+  render(time: number, xrFrame: XRFrame) {
+
 
     if (this.animationMixer) {
       const deltaTime = this.clock.getDelta();
       this.animationMixer.update(deltaTime);
     }
 
-    if(!this.isLoading) {
+    if (this.userHeight === 0 && xrFrame) {
+      const xrPose = xrFrame.getViewerPose(this.renderer?.xr.getReferenceSpace());
+      if (xrPose) {
+        this.userHeight = xrPose?.transform.position.y;
+      }
+    }
+
+    if (!this.isLoading) {
       this.fixTextureSize(this.dosCanvas, this.dosTexture);
       this.processGamepadsInputs();
     }
@@ -218,14 +258,6 @@ class VRDos {
     }
   }
 
-  private sendText(text: string) {
-
-  }
-
-  private sendCode(name: string) {
-
-  }
-
   private setupVRControllers() {
 
     /*
@@ -251,7 +283,7 @@ class VRDos {
     const scene = this.scene;
 
     if (xrManager && scene) {
-
+     
       const controllers = [
         xrManager.getController(0),
         xrManager.getController(1)
@@ -272,10 +304,11 @@ class VRDos {
             gamepad => controller.gamepad?.id !== gamepad.id
           );
         });
-
-        scene.add(controller);
+       
+        // this.vrUser.add(controller);
 
       });
+  
 
       const controllerModelFactory = new XRControllerModelFactory();
       const controllerGrips = [
@@ -284,7 +317,7 @@ class VRDos {
       ]
       controllerGrips.forEach(grip => {
         grip.add(controllerModelFactory.createControllerModel(grip));
-        scene.add(grip);
+        this.vrUser.add(grip);
       });
 
     }
@@ -301,29 +334,55 @@ class VRDos {
     }
     this.renderer = this.createRenderer();
 
-    const cameraPosition = new Vector3(0, .7, 0);
-    const orbitalTarget = new Vector3(0, .7, 0);
-    const fov = 65;
+    const computerMonitorHeight = .7;
+
     this.scene = this.createScene();
+
+    const cameraPosition = new Vector3(0, computerMonitorHeight, 0);
+    const fov = 65;
     this.camera = this.createCamera(fov, this.aspectRatio, cameraPosition);
+
+
+    this.vrUser.position.set(0, 0, 0);
+    this.vrUser.add(this.camera);
+    this.scene.add(this.vrUser);
+
+    const orbitalTarget = new Vector3(0, computerMonitorHeight, 0);
     this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget);
+
+    // Adjust VR view height
+    // @ts-ignore
+    this.renderer.xr.addEventListener(
+      'sessionstart',
+      () => {
+        setTimeout(() => {
+          const diff = computerMonitorHeight - this.userHeight;
+          this.vrUser.position.set(0, diff, 0);
+        }, 100); // FIXME
+      }
+    );
+
+    // @ts-ignore
+    this.renderer.xr.addEventListener(
+      'sessionend',
+      () => {
+        this.userHeight = 0;
+        this.vrUser.position.set(0, 0, 0);
+      }
+    );
 
     this.createLights().forEach(light => this.scene?.add(light));
 
     this.setupVRControllers();
 
     if (domElement) {
-
       domElement.appendChild(this.renderer.domElement);
-
       domElement.appendChild(
         VRButton.createButton(
           this.renderer,
-       //   { referenceSpaceType: 'viewer' } 
+          { referenceSpaceType: 'local-floor' }
         )
       );
-
-
     } else {
       throw Error('Missing container dom element');
     }
@@ -338,8 +397,6 @@ class VRDos {
     const roomScreenMesh = <Mesh>this.scene.getObjectByName(this.screenMeshName);
 
     if (roomScreenMesh) {
-    
-
       await this.attachDosScreen(roomScreenMesh);
     } else {
       throw new Error('Screen mesh not found' + this.screenMeshName);
@@ -388,9 +445,9 @@ class VRDos {
     return <Promise<GLTF>>promise;
   }
 
-  private async bootDosGame(archiveUrl = 'pop.zip') {
+  private async bootDosGame(archiveUrl = 'dos-hdd.zip') {
     this.setLoading(true, `Booting ${archiveUrl}`);
-    await this.dos.run(archiveUrl, ['-c', 'prince.exe']);
+    await this.dos.run(archiveUrl, ['-c', 'c:\\doszip\\dz.exe']);  //
     this.setLoading(false);
   }
 
@@ -398,7 +455,7 @@ class VRDos {
     canvas: HTMLCanvasElement,
     texture: CanvasTexture
   ) {
-    // Other possible fixes for not power of 2 textures:
+    // Other possible fixes for 'not power of 2' textures:
     // this.dosTexture.minFilter = LinearFilter; // looks ugly
     // or use WebGL 2 // Not supported by Safari
     if (!MathUtils.isPowerOfTwo(canvas.width)) {

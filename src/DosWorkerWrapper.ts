@@ -20,7 +20,7 @@ class DosWorkerWrapper {
   private worker: Worker | null = null;
   private rpcPromises = <any>{};
   private commands: string[] = [];
-  private startedPromise = () => {};
+  private startedPromise = () => { };
   private texture: CanvasTexture;
 
 
@@ -182,7 +182,7 @@ class DosWorkerWrapper {
         bytes
       );
     }
- 
+
     const args = ['run', '-c', 'mount c .', '-c', 'c:', ...this.commands];
     await this.callWorker.apply(this, args);
     this.startedPromise();
@@ -220,7 +220,7 @@ class DosWorkerWrapper {
       setTimeout(() => {
         delete this.rpcPromises[id];
         reject(cmd + ' timeout');
-      }, 1500)
+      }, 20000)
     });
   };
 
@@ -238,8 +238,8 @@ class DosWorkerWrapper {
       if (dst?.set) {
         this.texture.needsUpdate = true;
         dst.set(this.renderFrameData);
-      } else {   
-        for (var i = 0; i < this.renderFrameData.length; i++) { 
+      } else {
+        for (var i = 0; i < this.renderFrameData.length; i++) {
           // @ts-ignore
           dst[i] = this.renderFrameData[i];
         }
@@ -253,13 +253,22 @@ class DosWorkerWrapper {
     this.renderFrameData = null;
   }
 
+  public sendKey(keyCode: number, type = 'keyup') {
+    this.worker?.postMessage({
+      target: 'document', event: {
+        keyCode,
+        type
+      }
+    });
+  }
+
   private attachEvents() {
     // TODO: Move listeners to canvas
     ['keydown', 'keyup', 'keypress', 'blur', 'visibilitychange']
       .forEach((eventName) => {
         document.addEventListener(eventName, (event: Event) => {
-
-          this.worker?.postMessage({ target: 'document', event: cloneObject(event) });
+          const clonedEvent = cloneObject(event);
+          this.worker?.postMessage({ target: 'document', event: clonedEvent });
 
           if (shouldPreventDefault(<KeyboardEvent>event)) {
             event.preventDefault();
