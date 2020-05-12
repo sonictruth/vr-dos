@@ -39333,6 +39333,127 @@ u(++l%c.children.length)},!1);var k=(performance||Date).now(),g=k,a=0,r=e(new f.
 1048576,d.jsHeapSizeLimit/1048576)}return c},update:function(){k=this.end()},domElement:c,setMode:u}};f.Panel=function(e,f,l){var c=Infinity,k=0,g=Math.round,a=g(window.devicePixelRatio||1),r=80*a,h=48*a,t=3*a,v=2*a,d=3*a,m=15*a,n=74*a,p=30*a,q=document.createElement("canvas");q.width=r;q.height=h;q.style.cssText="width:80px;height:48px";var b=q.getContext("2d");b.font="bold "+9*a+"px Helvetica,Arial,sans-serif";b.textBaseline="top";b.fillStyle=l;b.fillRect(0,0,r,h);b.fillStyle=f;b.fillText(e,t,v);
 b.fillRect(d,m,n,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d,m,n,p);return{dom:q,update:function(h,w){c=Math.min(c,h);k=Math.max(k,h);b.fillStyle=l;b.globalAlpha=1;b.fillRect(0,0,r,m);b.fillStyle=f;b.fillText(g(h)+" "+e+" ("+g(c)+"-"+g(k)+")",t,v);b.drawImage(q,d+a,m,n-a,p,d,m,n-a,p);b.fillRect(d+n-a,m,a,p);b.fillStyle=l;b.globalAlpha=.9;b.fillRect(d+n-a,m,a,g((1-h/w)*p))}}};return f});
 
+},{}],"../node_modules/ts-keycode-enum/dist/js/Key.enum.js":[function(require,module,exports) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Key;
+(function (Key) {
+    Key[Key["Backspace"] = 8] = "Backspace";
+    Key[Key["Tab"] = 9] = "Tab";
+    Key[Key["Enter"] = 13] = "Enter";
+    Key[Key["Shift"] = 16] = "Shift";
+    Key[Key["Ctrl"] = 17] = "Ctrl";
+    Key[Key["Alt"] = 18] = "Alt";
+    Key[Key["PauseBreak"] = 19] = "PauseBreak";
+    Key[Key["CapsLock"] = 20] = "CapsLock";
+    Key[Key["Escape"] = 27] = "Escape";
+    Key[Key["Space"] = 32] = "Space";
+    Key[Key["PageUp"] = 33] = "PageUp";
+    Key[Key["PageDown"] = 34] = "PageDown";
+    Key[Key["End"] = 35] = "End";
+    Key[Key["Home"] = 36] = "Home";
+    Key[Key["LeftArrow"] = 37] = "LeftArrow";
+    Key[Key["UpArrow"] = 38] = "UpArrow";
+    Key[Key["RightArrow"] = 39] = "RightArrow";
+    Key[Key["DownArrow"] = 40] = "DownArrow";
+    Key[Key["Insert"] = 45] = "Insert";
+    Key[Key["Delete"] = 46] = "Delete";
+    Key[Key["Zero"] = 48] = "Zero";
+    Key[Key["ClosedParen"] = 48] = "ClosedParen";
+    Key[Key["One"] = 49] = "One";
+    Key[Key["ExclamationMark"] = 49] = "ExclamationMark";
+    Key[Key["Two"] = 50] = "Two";
+    Key[Key["AtSign"] = 50] = "AtSign";
+    Key[Key["Three"] = 51] = "Three";
+    Key[Key["PoundSign"] = 51] = "PoundSign";
+    Key[Key["Hash"] = 51] = "Hash";
+    Key[Key["Four"] = 52] = "Four";
+    Key[Key["DollarSign"] = 52] = "DollarSign";
+    Key[Key["Five"] = 53] = "Five";
+    Key[Key["PercentSign"] = 53] = "PercentSign";
+    Key[Key["Six"] = 54] = "Six";
+    Key[Key["Caret"] = 54] = "Caret";
+    Key[Key["Hat"] = 54] = "Hat";
+    Key[Key["Seven"] = 55] = "Seven";
+    Key[Key["Ampersand"] = 55] = "Ampersand";
+    Key[Key["Eight"] = 56] = "Eight";
+    Key[Key["Star"] = 56] = "Star";
+    Key[Key["Asterik"] = 56] = "Asterik";
+    Key[Key["Nine"] = 57] = "Nine";
+    Key[Key["OpenParen"] = 57] = "OpenParen";
+    Key[Key["A"] = 65] = "A";
+    Key[Key["B"] = 66] = "B";
+    Key[Key["C"] = 67] = "C";
+    Key[Key["D"] = 68] = "D";
+    Key[Key["E"] = 69] = "E";
+    Key[Key["F"] = 70] = "F";
+    Key[Key["G"] = 71] = "G";
+    Key[Key["H"] = 72] = "H";
+    Key[Key["I"] = 73] = "I";
+    Key[Key["J"] = 74] = "J";
+    Key[Key["K"] = 75] = "K";
+    Key[Key["L"] = 76] = "L";
+    Key[Key["M"] = 77] = "M";
+    Key[Key["N"] = 78] = "N";
+    Key[Key["O"] = 79] = "O";
+    Key[Key["P"] = 80] = "P";
+    Key[Key["Q"] = 81] = "Q";
+    Key[Key["R"] = 82] = "R";
+    Key[Key["S"] = 83] = "S";
+    Key[Key["T"] = 84] = "T";
+    Key[Key["U"] = 85] = "U";
+    Key[Key["V"] = 86] = "V";
+    Key[Key["W"] = 87] = "W";
+    Key[Key["X"] = 88] = "X";
+    Key[Key["Y"] = 89] = "Y";
+    Key[Key["Z"] = 90] = "Z";
+    Key[Key["LeftWindowKey"] = 91] = "LeftWindowKey";
+    Key[Key["RightWindowKey"] = 92] = "RightWindowKey";
+    Key[Key["SelectKey"] = 93] = "SelectKey";
+    Key[Key["Numpad0"] = 96] = "Numpad0";
+    Key[Key["Numpad1"] = 97] = "Numpad1";
+    Key[Key["Numpad2"] = 98] = "Numpad2";
+    Key[Key["Numpad3"] = 99] = "Numpad3";
+    Key[Key["Numpad4"] = 100] = "Numpad4";
+    Key[Key["Numpad5"] = 101] = "Numpad5";
+    Key[Key["Numpad6"] = 102] = "Numpad6";
+    Key[Key["Numpad7"] = 103] = "Numpad7";
+    Key[Key["Numpad8"] = 104] = "Numpad8";
+    Key[Key["Numpad9"] = 105] = "Numpad9";
+    Key[Key["Multiply"] = 106] = "Multiply";
+    Key[Key["Add"] = 107] = "Add";
+    Key[Key["Subtract"] = 109] = "Subtract";
+    Key[Key["DecimalPoint"] = 110] = "DecimalPoint";
+    Key[Key["Divide"] = 111] = "Divide";
+    Key[Key["F1"] = 112] = "F1";
+    Key[Key["F2"] = 113] = "F2";
+    Key[Key["F3"] = 114] = "F3";
+    Key[Key["F4"] = 115] = "F4";
+    Key[Key["F5"] = 116] = "F5";
+    Key[Key["F6"] = 117] = "F6";
+    Key[Key["F7"] = 118] = "F7";
+    Key[Key["F8"] = 119] = "F8";
+    Key[Key["F9"] = 120] = "F9";
+    Key[Key["F10"] = 121] = "F10";
+    Key[Key["F11"] = 122] = "F11";
+    Key[Key["F12"] = 123] = "F12";
+    Key[Key["NumLock"] = 144] = "NumLock";
+    Key[Key["ScrollLock"] = 145] = "ScrollLock";
+    Key[Key["SemiColon"] = 186] = "SemiColon";
+    Key[Key["Equals"] = 187] = "Equals";
+    Key[Key["Comma"] = 188] = "Comma";
+    Key[Key["Dash"] = 189] = "Dash";
+    Key[Key["Period"] = 190] = "Period";
+    Key[Key["UnderScore"] = 189] = "UnderScore";
+    Key[Key["PlusSign"] = 187] = "PlusSign";
+    Key[Key["ForwardSlash"] = 191] = "ForwardSlash";
+    Key[Key["Tilde"] = 192] = "Tilde";
+    Key[Key["GraveAccent"] = 192] = "GraveAccent";
+    Key[Key["OpenBracket"] = 219] = "OpenBracket";
+    Key[Key["ClosedBracket"] = 221] = "ClosedBracket";
+    Key[Key["Quote"] = 222] = "Quote";
+})(Key = exports.Key || (exports.Key = {}));
+
 },{}],"utils.ts":[function(require,module,exports) {
 "use strict";
 
@@ -40015,7 +40136,7 @@ function () {
           setTimeout(function () {
             delete _this.rpcPromises[id];
             reject(cmd + ' timeout');
-          }, 1500);
+          }, 20000);
         })];
       });
     });
@@ -40055,6 +40176,22 @@ function () {
     this.renderFrameData = null;
   };
 
+  DosWorkerWrapper.prototype.sendKey = function (keyCode, type) {
+    if (type === void 0) {
+      type = 'keyup';
+    }
+
+    var _a;
+
+    (_a = this.worker) === null || _a === void 0 ? void 0 : _a.postMessage({
+      target: 'document',
+      event: {
+        keyCode: keyCode,
+        type: type
+      }
+    });
+  };
+
   DosWorkerWrapper.prototype.attachEvents = function () {
     var _this = this; // TODO: Move listeners to canvas
 
@@ -40063,9 +40200,10 @@ function () {
       document.addEventListener(eventName, function (event) {
         var _a;
 
+        var clonedEvent = utils_1.cloneObject(event);
         (_a = _this.worker) === null || _a === void 0 ? void 0 : _a.postMessage({
           target: 'document',
-          event: utils_1.cloneObject(event)
+          event: clonedEvent
         });
 
         if (utils_1.shouldPreventDefault(event)) {
@@ -40266,6 +40404,8 @@ var XRControllerModelFactory_js_1 = require("three/examples/jsm/webxr/XRControll
 
 var stats_js_1 = __importDefault(require("stats.js"));
 
+var ts_keycode_enum_1 = require("ts-keycode-enum");
+
 var DosWorkerWrapper_1 = __importDefault(require("./DosWorkerWrapper"));
 
 var GamePadAxis;
@@ -40295,6 +40435,17 @@ function () {
     this.animationClips = [];
     this.clock = new three_1.Clock();
     this.isLoading = true;
+    this.userHeight = 0;
+    this.keyStatus = {};
+    this.gamePadButtonMap = {
+      0: [ts_keycode_enum_1.Key.Enter],
+      1: [ts_keycode_enum_1.Key.Shift],
+      3: [ts_keycode_enum_1.Key.Ctrl],
+      4: [ts_keycode_enum_1.Key.Space, ts_keycode_enum_1.Key.Shift, ts_keycode_enum_1.Key.Ctrl],
+      5: [ts_keycode_enum_1.Key.Ctrl, ts_keycode_enum_1.Key.Q, ts_keycode_enum_1.Key.Escape] // B
+
+    };
+    this.vrUser = new three_1.Group();
   }
 
   Object.defineProperty(VRDos.prototype, "devicePixelRatio", {
@@ -40335,9 +40486,11 @@ function () {
 
     if (loading) {
       if (ctx && this.dosTexture) {
+        this.dosCanvas.width = 512;
+        this.dosCanvas.height = 512;
         ctx.font = 'bold 15px Verdana';
         ctx.fillStyle = 'green';
-        ctx.fillText(text, 20, 20);
+        ctx.fillText(text, 40, 40);
       }
 
       this.isLoading = loading;
@@ -40348,55 +40501,87 @@ function () {
     ;
   };
 
+  VRDos.prototype.emulateKeyEvent = function (code, type) {
+    if (!this.keyStatus[code] && type === 'keydown') {
+      this.dos.sendKey(code, type);
+      this.keyStatus[code] = type;
+    } else if (this.keyStatus[code] === 'keydown' && type === 'keyup') {
+      this.dos.sendKey(code, type);
+      delete this.keyStatus[code];
+    }
+  };
+
   VRDos.prototype.processGamepadsInputs = function () {
-    for (var i = 0; i < this.gamepads.length; i++) {
-      var gamepad = this.gamepads[i];
+    var _this = this;
 
-      for (var ai = 0; ai < gamepad.axes.length; ai++) {
-        var value = gamepad.axes[ai];
+    if (this.gamepads.length === 0) {
+      return;
+    }
 
-        if (ai === GamePadAxis.x) {
-          if (value > this.pressThreshold) {
-            this.sendCode('right');
-          } else if (value < -this.pressThreshold) {
-            this.sendCode('left');
-          }
-        }
+    var gamepad = this.gamepads[this.gamepads.length - 1]; // Joystick
 
-        if (ai === GamePadAxis.y) {
-          if (value > this.pressThreshold) {
-            this.sendCode('down');
-          } else if (value < -this.pressThreshold) {
-            this.sendCode('up');
-          }
-        }
-      }
+    for (var ai = 0; ai < gamepad.axes.length; ai++) {
+      var value = gamepad.axes[ai];
 
-      for (var bi = 0; bi < gamepad.buttons.length; bi++) {
-        var button = gamepad.buttons[bi];
-
-        if (button.pressed) {
-          // https://www.w3.org/TR/webxr-gamepads-module-1/#xr-standard-gamepad-mapping
-          // https://w3c.github.io/gamepad/#dfn-standard-gamepad-layout
-          // 0 1,  4 5 
-          if (bi === 3) {//this.sendText(this.startGameCmd);
-          }
-
-          if (bi === 0) {//this.sendCode('enter');
-          }
+      if (ai === GamePadAxis.x) {
+        if (value > this.pressThreshold) {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.RightArrow, 'keydown');
+        } else if (value < -this.pressThreshold) {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.LeftArrow, 'keydown');
+        } else {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.RightArrow, 'keyup');
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.LeftArrow, 'keyup');
         }
       }
+
+      if (ai === GamePadAxis.y) {
+        if (value > this.pressThreshold) {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.DownArrow, 'keydown');
+        } else if (value < -this.pressThreshold) {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.UpArrow, 'keydown');
+        } else {
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.UpArrow, 'keyup');
+          this.emulateKeyEvent(ts_keycode_enum_1.Key.DownArrow, 'keyup');
+        }
+      }
+    }
+
+    var _loop_1 = function _loop_1(bi) {
+      var button = gamepad.buttons[bi];
+      var map = this_1.gamePadButtonMap[bi];
+
+      if (map) {
+        map.forEach(function (key) {
+          var action = button.pressed ? 'keydown' : 'keyup';
+
+          _this.emulateKeyEvent(key, action);
+        });
+      }
+    };
+
+    var this_1 = this; // Buttons
+
+    for (var bi = 0; bi < gamepad.buttons.length; bi++) {
+      _loop_1(bi);
     }
 
     ;
   };
 
-  VRDos.prototype.render = function () {
-    var _a;
+  VRDos.prototype.render = function (time, xrFrame) {
+    var _a, _b;
 
     if (this.animationMixer) {
       var deltaTime = this.clock.getDelta();
       this.animationMixer.update(deltaTime);
+    }
+
+    if (this.userHeight === 0 && xrFrame) {
+      var xrPose = xrFrame.getViewerPose((_a = this.renderer) === null || _a === void 0 ? void 0 : _a.xr.getReferenceSpace());
+
+      if (xrPose) {
+        this.userHeight = xrPose === null || xrPose === void 0 ? void 0 : xrPose.transform.position.y;
+      }
     }
 
     if (!this.isLoading) {
@@ -40404,7 +40589,7 @@ function () {
       this.processGamepadsInputs();
     }
 
-    (_a = this.renderer) === null || _a === void 0 ? void 0 : _a.render(this.scene, this.camera);
+    (_b = this.renderer) === null || _b === void 0 ? void 0 : _b.render(this.scene, this.camera);
 
     if (this.isDev) {
       this.stats.update();
@@ -40473,10 +40658,6 @@ function () {
     }
   };
 
-  VRDos.prototype.sendText = function (text) {};
-
-  VRDos.prototype.sendCode = function (name) {};
-
   VRDos.prototype.setupVRControllers = function () {
     /*
     const buildController = (xrInputSource: XRInputSource): Object3D | undefined => {
@@ -40520,21 +40701,21 @@ function () {
 
             return ((_a = controller.gamepad) === null || _a === void 0 ? void 0 : _a.id) !== gamepad.id;
           });
-        });
-        scene.add(controller);
+        }); // this.vrUser.add(controller);
       });
       var controllerModelFactory_1 = new XRControllerModelFactory_js_1.XRControllerModelFactory();
       var controllerGrips = [xrManager.getControllerGrip(0), xrManager.getControllerGrip(1)];
       controllerGrips.forEach(function (grip) {
         grip.add(controllerModelFactory_1.createControllerModel(grip));
-        scene.add(grip);
+
+        _this.vrUser.add(grip);
       });
     }
   };
 
   VRDos.prototype.run = function (domElement) {
     return __awaiter(this, void 0, void 0, function () {
-      var cameraPosition, orbitalTarget, fov, roomGLTF, roomMesh, roomScreenMesh;
+      var computerMonitorHeight, cameraPosition, fov, orbitalTarget, roomGLTF, roomMesh, roomScreenMesh;
 
       var _this = this;
 
@@ -40553,12 +40734,31 @@ function () {
             }
 
             this.renderer = this.createRenderer();
-            cameraPosition = new three_1.Vector3(0, .7, 0);
-            orbitalTarget = new three_1.Vector3(0, .7, 0);
-            fov = 65;
+            computerMonitorHeight = .7;
             this.scene = this.createScene();
+            cameraPosition = new three_1.Vector3(0, computerMonitorHeight, 0);
+            fov = 65;
             this.camera = this.createCamera(fov, this.aspectRatio, cameraPosition);
-            this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget);
+            this.vrUser.position.set(0, 0, 0);
+            this.vrUser.add(this.camera);
+            this.scene.add(this.vrUser);
+            orbitalTarget = new three_1.Vector3(0, computerMonitorHeight, 0);
+            this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget); // Adjust VR view height
+            // @ts-ignore
+
+            this.renderer.xr.addEventListener('sessionstart', function () {
+              setTimeout(function () {
+                var diff = computerMonitorHeight - _this.userHeight;
+
+                _this.vrUser.position.set(0, diff, 0);
+              }, 100); // FIXME
+            }); // @ts-ignore
+
+            this.renderer.xr.addEventListener('sessionend', function () {
+              _this.userHeight = 0;
+
+              _this.vrUser.position.set(0, 0, 0);
+            });
             this.createLights().forEach(function (light) {
               var _a;
 
@@ -40568,7 +40768,9 @@ function () {
 
             if (domElement) {
               domElement.appendChild(this.renderer.domElement);
-              domElement.appendChild(VRButton_js_1.VRButton.createButton(this.renderer));
+              domElement.appendChild(VRButton_js_1.VRButton.createButton(this.renderer, {
+                referenceSpaceType: 'local-floor'
+              }));
             } else {
               throw Error('Missing container dom element');
             }
@@ -40676,7 +40878,7 @@ function () {
 
   VRDos.prototype.bootDosGame = function (archiveUrl) {
     if (archiveUrl === void 0) {
-      archiveUrl = 'pop.zip';
+      archiveUrl = 'dos-hdd.zip';
     }
 
     return __awaiter(this, void 0, void 0, function () {
@@ -40686,10 +40888,11 @@ function () {
             this.setLoading(true, "Booting " + archiveUrl);
             return [4
             /*yield*/
-            , this.dos.run(archiveUrl, ['-c', 'prince.exe'])];
+            , this.dos.run(archiveUrl, ['-c', 'c:\\doszip\\dz.exe'])];
 
           case 1:
-            _a.sent();
+            _a.sent(); //
+
 
             this.setLoading(false);
             return [2
@@ -40701,7 +40904,7 @@ function () {
   };
 
   VRDos.prototype.fixTextureSize = function (canvas, texture) {
-    // Other possible fixes for not power of 2 textures:
+    // Other possible fixes for 'not power of 2' textures:
     // this.dosTexture.minFilter = LinearFilter; // looks ugly
     // or use WebGL 2 // Not supported by Safari
     if (!three_1.MathUtils.isPowerOfTwo(canvas.width)) {
@@ -40732,7 +40935,7 @@ function () {
 }();
 
 exports.default = VRDos;
-},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/webxr/VRButton.js":"../node_modules/three/examples/jsm/webxr/VRButton.js","three/examples/jsm/controls/OrbitControls.js":"../node_modules/three/examples/jsm/controls/OrbitControls.js","three/examples/jsm/loaders/GLTFLoader.js":"../node_modules/three/examples/jsm/loaders/GLTFLoader.js","three/examples/jsm/webxr/XRControllerModelFactory.js":"../node_modules/three/examples/jsm/webxr/XRControllerModelFactory.js","stats.js":"../node_modules/stats.js/build/stats.min.js","./DosWorkerWrapper":"DosWorkerWrapper.ts"}],"../node_modules/webxr-polyfill/build/webxr-polyfill.module.js":[function(require,module,exports) {
+},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/webxr/VRButton.js":"../node_modules/three/examples/jsm/webxr/VRButton.js","three/examples/jsm/controls/OrbitControls.js":"../node_modules/three/examples/jsm/controls/OrbitControls.js","three/examples/jsm/loaders/GLTFLoader.js":"../node_modules/three/examples/jsm/loaders/GLTFLoader.js","three/examples/jsm/webxr/XRControllerModelFactory.js":"../node_modules/three/examples/jsm/webxr/XRControllerModelFactory.js","stats.js":"../node_modules/stats.js/build/stats.min.js","ts-keycode-enum":"../node_modules/ts-keycode-enum/dist/js/Key.enum.js","./DosWorkerWrapper":"DosWorkerWrapper.ts"}],"../node_modules/webxr-polyfill/build/webxr-polyfill.module.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -49651,18 +49854,6 @@ var webxr_polyfill_1 = __importDefault(require("webxr-polyfill"));
     });
   });
 })();
-/*
-import Dos from './Dos';
-const canvas = document.createElement('canvas');
-document.getElementById('main')?.appendChild(canvas);
-canvas.style.border = '1px solid red';
-canvas.width = 800;
-canvas.height = 640;
-document.body.classList.remove('loading');
-
-const dos = new Dos(canvas);
-dos.run('./pop.zip', ['-c','prince.exe']);
-*/
 },{"./VRDos":"VRDos.ts","webxr-polyfill":"../node_modules/webxr-polyfill/build/webxr-polyfill.module.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -49691,7 +49882,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53704" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
