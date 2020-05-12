@@ -16,7 +16,7 @@ In VR this are the default mappings (tested with Oculus Quest):
 
 0: [Key.Enter], // Trigger
 
-1: [Key.Shift], // Sqeeze
+1: [Key.Shift], // Squeeze
 
 3: [Key.Ctrl], // Joy fire
 
