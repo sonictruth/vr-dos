@@ -25,10 +25,11 @@ In VR this are the default mappings (tested with Oculus Quest):
 5: [Key.Ctrl, Key.Q, Key.Escape]  // B
 
 ## TODO
-- Add soumd
+- Add sound support
 - Add mouse support 
 - Add Joystick support
 - Optimize canvas drawing using OffscreenCanvas
+- Optimize rendering loops, gamepad handling
 
 ## Credits
 3D Model  https://sketchfab.com/railek
