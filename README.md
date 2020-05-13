@@ -12,7 +12,7 @@ The VR environment was built using Three.js and the emulator is rendered inside 
 
 ## Keys
 
-On PC you can use your keyboard to control the PC and mouse to look around.
+On PC you can use your keyboard to control the emulator and mouse to look around.
 In VR this are the default mappings (tested with Oculus Quest):
 
 0: [Key.Enter], // Trigger
