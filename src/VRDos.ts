@@ -20,8 +20,6 @@ import {
   Clock,
   LoopOnce,
   AnimationClip,
-  Raycaster,
-  ArrayCamera,
   Group,
 } from 'three';
 
@@ -40,9 +38,6 @@ enum GamePadAxis {
   x = 2,
   y = 3,
 }
-
-
-
 
 class VRDos {
   private scene: Scene | null = null;
@@ -108,6 +103,7 @@ class VRDos {
         ctx.fillStyle = 'green';
         ctx.fillText(text, 40, 40);
       }
+      this.dosTexture.needsUpdate = true;
       this.isLoading = loading;
     } else {
       this.isLoading = loading;
@@ -115,7 +111,7 @@ class VRDos {
 
   }
 
-  private emulateKeyEvent(code: number, type: 'keydown' | 'keyup') {
+  public emulateKeyEvent(code: number, type: 'keydown' | 'keyup') {
     if (!this.keyStatus[code] && type === 'keydown') {
       this.dos.sendKey(code, type);
       this.keyStatus[code] = type;
@@ -127,45 +123,45 @@ class VRDos {
 
 
   private processGamepadsInputs() {
-      if (this.gamepads.length === 0) {
-        return;
-      }
-      const gamepad = this.gamepads[this.gamepads.length-1];
-      
-      // Joystick
-      for (let ai = 0; ai < gamepad.axes.length; ai++) {
-        const value = gamepad.axes[ai];
-        if (ai === GamePadAxis.x) {
-          if (value > this.pressThreshold) {
-            this.emulateKeyEvent(Key.RightArrow, 'keydown');
-          } else if (value < -this.pressThreshold) {
-            this.emulateKeyEvent(Key.LeftArrow, 'keydown');
-          } else {
-            this.emulateKeyEvent(Key.RightArrow, 'keyup');
-            this.emulateKeyEvent(Key.LeftArrow, 'keyup');
-          }
-        }
-        if (ai === GamePadAxis.y) {
-          if (value > this.pressThreshold) {
-            this.emulateKeyEvent(Key.DownArrow, 'keydown');
-          } else if (value < -this.pressThreshold) {
-            this.emulateKeyEvent(Key.UpArrow, 'keydown');
-          } else {
-            this.emulateKeyEvent(Key.UpArrow, 'keyup');
-            this.emulateKeyEvent(Key.DownArrow, 'keyup');
-          }
+    if (this.gamepads.length === 0) {
+      return;
+    }
+    const gamepad = this.gamepads[this.gamepads.length - 1];
+
+    // Joystick
+    for (let ai = 0; ai < gamepad.axes.length; ai++) {
+      const value = gamepad.axes[ai];
+      if (ai === GamePadAxis.x) {
+        if (value > this.pressThreshold) {
+          this.emulateKeyEvent(Key.RightArrow, 'keydown');
+        } else if (value < -this.pressThreshold) {
+          this.emulateKeyEvent(Key.LeftArrow, 'keydown');
+        } else {
+          this.emulateKeyEvent(Key.RightArrow, 'keyup');
+          this.emulateKeyEvent(Key.LeftArrow, 'keyup');
         }
       }
-      // Buttons
-      for (let bi = 0; bi < gamepad.buttons.length; bi++) {
-        const button = gamepad.buttons[bi];
-        const map = this.gamePadButtonMap[bi];
-        if(map){
-          map.forEach(key => {
-            const action = button.pressed ? 'keydown': 'keyup';
-            this.emulateKeyEvent(key, action);
-          });
+      if (ai === GamePadAxis.y) {
+        if (value > this.pressThreshold) {
+          this.emulateKeyEvent(Key.DownArrow, 'keydown');
+        } else if (value < -this.pressThreshold) {
+          this.emulateKeyEvent(Key.UpArrow, 'keydown');
+        } else {
+          this.emulateKeyEvent(Key.UpArrow, 'keyup');
+          this.emulateKeyEvent(Key.DownArrow, 'keyup');
         }
+      }
+    }
+    // Buttons
+    for (let bi = 0; bi < gamepad.buttons.length; bi++) {
+      const button = gamepad.buttons[bi];
+      const map = this.gamePadButtonMap[bi];
+      if (map) {
+        map.forEach(key => {
+          const action = button.pressed ? 'keydown' : 'keyup';
+          this.emulateKeyEvent(key, action);
+        });
+      }
     };
   }
 
@@ -283,7 +279,7 @@ class VRDos {
     const scene = this.scene;
 
     if (xrManager && scene) {
-     
+
       const controllers = [
         xrManager.getController(0),
         xrManager.getController(1)
@@ -304,11 +300,11 @@ class VRDos {
             gamepad => controller.gamepad?.id !== gamepad.id
           );
         });
-       
+
         // this.vrUser.add(controller);
 
       });
-  
+
 
       const controllerModelFactory = new XRControllerModelFactory();
       const controllerGrips = [
@@ -324,7 +320,7 @@ class VRDos {
 
   }
 
-  async run(domElement: HTMLElement | null) {
+  async init(domElement: HTMLElement | null) {
     if (this.initialized) {
       return;
     }
@@ -347,8 +343,14 @@ class VRDos {
     this.vrUser.add(this.camera);
     this.scene.add(this.vrUser);
 
-    const orbitalTarget = new Vector3(0, computerMonitorHeight, 0);
-    this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget);
+
+     this.createOrbitControls(
+      this.camera, 
+      this.renderer.domElement, 
+      new Vector3(0, computerMonitorHeight, 0)
+    );
+
+
 
     // Adjust VR view height
     // @ts-ignore
@@ -404,12 +406,14 @@ class VRDos {
 
     this.renderer.setAnimationLoop(this.render.bind(this));
     this.initialized = true;
-    (async () => {
+  }
+
+  public async run(archiveUrl: string, commands: string[] = []) {
       this.setLoading(true, `Please wait...`);
       await this.playIntro();
-      this.bootDosGame();
-    })();
-
+      this.setLoading(true, `Booting ${archiveUrl}...`);
+      await this.dos.run(archiveUrl, commands);
+      this.setLoading(false);
   }
 
   private async playIntro() {
@@ -445,11 +449,6 @@ class VRDos {
     return <Promise<GLTF>>promise;
   }
 
-  private async bootDosGame(archiveUrl = 'dos-hdd.zip') {
-    this.setLoading(true, `Booting ${archiveUrl}`);
-    await this.dos.run(archiveUrl, ['-c', 'c:\\doszip\\dz.exe']);  //
-    this.setLoading(false);
-  }
 
   private fixTextureSize(
     canvas: HTMLCanvasElement,

@@ -4,8 +4,7 @@ import {
   dosboxConf,
 } from './utils';
 
-import { Xhr } from 'js-dos/js-dos-ts/js-dos-xhr'
-import CacheNoop from 'js-dos/js-dos-ts/js-dos-cache-noop';
+import { Xhr } from './Xhr'
 import { CanvasTexture } from 'three';
 
 class DosWorkerWrapper {
@@ -193,7 +192,6 @@ class DosWorkerWrapper {
       new Xhr(
         url,
         {
-          cache: new CacheNoop(),
           responseType: "arraybuffer",
           fail: (msg) => reject(msg),
           success: (data: ArrayBuffer) => {

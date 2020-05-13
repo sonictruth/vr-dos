@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@webxr-input-profiles/motion-controllers": "^1.0.0",
-    "js-dos": "^6.22.59",
     "stats.js": "^0.17.0",
     "three": "^0.115.0",
     "ts-keycode-enum": "^1.0.6",

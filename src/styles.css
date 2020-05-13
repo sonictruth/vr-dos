@@ -11,15 +11,25 @@ body,
   background-color: #202020;
   color: green;
 }
-#help {
-  border-radius: 10px;
+#controls {
+  display: none;
+}
+#controls button {
+  color: gray;
+  width: 35px;
+  height: 35px;
+
+} 
+.ready #controls {
+  user-select: none;
+  text-align: center;
+  border-radius: 0;
   background-color: black;
   position: absolute;
-  left: 20%;
-  width: 60%;
-  top: 10px;
-  padding: 20px;
-  display: none;
+  right: 0;
+  top: 0;
+  padding: 10px;
+  display: block;
 }
 
 #spinner{
