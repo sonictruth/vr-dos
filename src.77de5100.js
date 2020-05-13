@@ -39490,77 +39490,26 @@ function shouldPreventDefault(event) {
 exports.shouldPreventDefault = shouldPreventDefault;
 ;
 exports.dosboxConf = "\n# This is the configurationfile for DOSBox 0.74. (Please use the latest version of DOSBox)\n# Lines starting with a # are commentlines and are ignored by DOSBox.\n# They are used to (briefly) document the effect of each option.\n\n[sdl]\n#       fullscreen: Start dosbox directly in fullscreen. (Press ALT-Enter to go back)\n#       fulldouble: Use double buffering in fullscreen. It can reduce screen flickering, but it can also result in a slow DOSBox.\n#   fullresolution: What resolution to use for fullscreen: original or fixed size (e.g. 1024x768).\n#                     Using your monitor's native resolution with aspect=true might give the best results.\n#                     If you end up with small window on a large screen, try an output different from surface.\n# windowresolution: Scale the window to this size IF the output device supports hardware scaling.\n#                     (output=surface does not!)\n#           output: What video system to use for output.\n#                   Possible values: surface, overlay, opengl, openglnb.\n#         autolock: Mouse will automatically lock, if you click on the screen. (Press CTRL-F10 to unlock)\n#      sensitivity: Mouse sensitivity.\n#      waitonerror: Wait before closing the console if dosbox has an error.\n#         priority: Priority levels for dosbox. Second entry behind the comma is for when dosbox is not focused/minimized.\n#                     pause is only valid for the second entry.\n#                   Possible values: lowest, lower, normal, higher, highest, pause.\n#       mapperfile: File used to load/save the key/event mappings from. Resetmapper only works with the defaul value.\n#     usescancodes: Avoid usage of symkeys, might not work on all operating systems.\n\nfullscreen=false\nfulldouble=false\nfullresolution=original\nwindowresolution=original\noutput=surface\nautolock=false\nsensitivity=100\nwaitonerror=true\npriority=higher,normal\nmapperfile=mapper-jsdos.map\nusescancodes=true\nvsync=false\n\n[dosbox]\n# language: Select another language file.\n#  machine: The type of machine tries to emulate.\n#           Possible values: hercules, cga, tandy, pcjr, ega, vgaonly, svga_s3, svga_et3000, svga_et4000, svga_paradise, vesa_nolfb, vesa_oldvbe.\n# captures: Directory where things like wave, midi, screenshot get captured.\n#  memsize: Amount of memory DOSBox has in megabytes.\n#             This value is best left at its default to avoid problems with some games,\n#             though few games might require a higher value.\n#             There is generally no speed advantage when raising this value.\n\nlanguage=\nmachine=svga_s3\ncaptures=capture\nmemsize=16\n\n[render]\n# frameskip: How many frames DOSBox skips before drawing one.\n#    aspect: Do aspect correction, if your output method doesn't support scaling this can slow things down!.\n#    scaler: Scaler used to enlarge/enhance low resolution modes.\n#              If 'forced' is appended, then the scaler will be used even if the result might not be desired.\n#            Possible values: none, normal2x, normal3x, advmame2x, advmame3x, advinterp2x, advinterp3x, hq2x, hq3x, 2xsai, super2xsai, supereagle, tv2x, tv3x, rgb2x, rgb3x, scan2x, scan3x.\n\nframeskip=0\naspect=false\nscaler=none\n\n[cpu]\n#      core: CPU Core used in emulation. auto will switch to dynamic if available and appropriate.\n#            Possible values: auto, dynamic, normal, simple.\n#   cputype: CPU Type used in emulation. auto is the fastest choice.\n#            Possible values: auto, 386, 386_slow, 486_slow, pentium_slow, 386_prefetch.\n#    cycles: Amount of instructions DOSBox tries to emulate each millisecond.\n#            Setting this value too high results in sound dropouts and lags.\n#            Cycles can be set in 3 ways:\n#              'auto'          tries to guess what a game needs.\n#                              It usually works, but can fail for certain games.\n#              'fixed #number' will set a fixed amount of cycles. This is what you usually need if 'auto' fails.\n#                              (Example: fixed 4000).\n#              'max'           will allocate as much cycles as your computer is able to handle.\n#\n#            Possible values: auto, fixed, max.\n#   cycleup: Amount of cycles to decrease/increase with keycombo.(CTRL-F11/CTRL-F12)\n# cycledown: Setting it lower than 100 will be a percentage.\n\ncore=auto\ncputype=auto\ncycles=auto\ncycleup=10\ncycledown=20\n\n[mixer]\n#   nosound: Enable silent mode, sound is still emulated though.\n#      rate: Mixer sample rate, setting any device's rate higher than this will probably lower their sound quality.\n#            Possible values: 44100, 48000, 32000, 22050, 16000, 11025, 8000, 49716.\n# blocksize: Mixer block size, larger blocks might help sound stuttering but sound will also be more lagged.\n#            Possible values: 1024, 2048, 4096, 8192, 512, 256.\n# prebuffer: How many milliseconds of data to keep on top of the blocksize.\n\nnosound=false\nrate=44100\nblocksize=1024\nprebuffer=20\n\n[midi]\n#     mpu401: Type of MPU-401 to emulate.\n#             Possible values: intelligent, uart, none.\n# mididevice: Device that will receive the MIDI data from MPU-401.\n#             Possible values: default, win32, alsa, oss, coreaudio, coremidi, none.\n# midiconfig: Special configuration options for the device driver. This is usually the id of the device you want to use.\n#               See the README/Manual for more details.\n\nmpu401=intelligent\nmididevice=default\nmidiconfig=\n\n[sblaster]\n#  sbtype: Type of Soundblaster to emulate. gb is Gameblaster.\n#          Possible values: sb1, sb2, sbpro1, sbpro2, sb16, gb, none.\n#  sbbase: The IO address of the soundblaster.\n#          Possible values: 220, 240, 260, 280, 2a0, 2c0, 2e0, 300.\n#     irq: The IRQ number of the soundblaster.\n#          Possible values: 7, 5, 3, 9, 10, 11, 12.\n#     dma: The DMA number of the soundblaster.\n#          Possible values: 1, 5, 0, 3, 6, 7.\n#    hdma: The High DMA number of the soundblaster.\n#          Possible values: 1, 5, 0, 3, 6, 7.\n# sbmixer: Allow the soundblaster mixer to modify the DOSBox mixer.\n# oplmode: Type of OPL emulation. On 'auto' the mode is determined by sblaster type. All OPL modes are Adlib-compatible, except for 'cms'.\n#          Possible values: auto, cms, opl2, dualopl2, opl3, none.\n#  oplemu: Provider for the OPL emulation. compat might provide better quality (see oplrate as well).\n#          Possible values: default, compat, fast.\n# oplrate: Sample rate of OPL music emulation. Use 49716 for highest quality (set the mixer rate accordingly).\n#          Possible values: 44100, 49716, 48000, 32000, 22050, 16000, 11025, 8000.\n\nsbtype=sb16\nsbbase=220\nirq=7\ndma=1\nhdma=5\nsbmixer=true\noplmode=auto\noplemu=default\noplrate=44100\n\n[gus]\n#      gus: Enable the Gravis Ultrasound emulation.\n#  gusrate: Sample rate of Ultrasound emulation.\n#           Possible values: 44100, 48000, 32000, 22050, 16000, 11025, 8000, 49716.\n#  gusbase: The IO base address of the Gravis Ultrasound.\n#           Possible values: 240, 220, 260, 280, 2a0, 2c0, 2e0, 300.\n#   gusirq: The IRQ number of the Gravis Ultrasound.\n#           Possible values: 5, 3, 7, 9, 10, 11, 12.\n#   gusdma: The DMA channel of the Gravis Ultrasound.\n#           Possible values: 3, 0, 1, 5, 6, 7.\n# ultradir: Path to Ultrasound directory. In this directory\n#           there should be a MIDI directory that contains\n#           the patch files for GUS playback. Patch sets used\n#           with Timidity should work fine.\n\ngus=false\ngusrate=44100\ngusbase=240\ngusirq=5\ngusdma=3\nultradir=C:ULTRASND\n\n[speaker]\n# pcspeaker: Enable PC-Speaker emulation.\n#    pcrate: Sample rate of the PC-Speaker sound generation.\n#            Possible values: 44100, 48000, 32000, 22050, 16000, 11025, 8000, 49716.\n#     tandy: Enable Tandy Sound System emulation. For 'auto', emulation is present only if machine is set to 'tandy'.\n#            Possible values: auto, on, off.\n# tandyrate: Sample rate of the Tandy 3-Voice generation.\n#            Possible values: 44100, 48000, 32000, 22050, 16000, 11025, 8000, 49716.\n#    disney: Enable Disney Sound Source emulation. (Covox Voice Master and Speech Thing compatible).\n\npcspeaker=true\npcrate=44100\ntandy=auto\ntandyrate=44100\ndisney=true\n\n[joystick]\n# joysticktype: Type of joystick to emulate: auto (default), none,\n#               2axis (supports two joysticks),\n#               4axis (supports one joystick, first joystick used),\n#               4axis_2 (supports one joystick, second joystick used),\n#               fcs (Thrustmaster), ch (CH Flightstick).\n#               none disables joystick emulation.\n#               auto chooses emulation depending on real joystick(s).\n#               (Remember to reset dosbox's mapperfile if you saved it earlier)\n#               Possible values: auto, 2axis, 4axis, 4axis_2, fcs, ch, none.\n#        timed: enable timed intervals for axis. Experiment with this option, if your joystick drifts (away).\n#     autofire: continuously fires as long as you keep the button pressed.\n#       swap34: swap the 3rd and the 4th axis. can be useful for certain joysticks.\n#   buttonwrap: enable button wrapping at the number of emulated buttons.\n\njoysticktype=auto\ntimed=true\nautofire=false\nswap34=false\nbuttonwrap=false\n\n[serial]\n# serial1: set type of device connected to com port.\n#          Can be disabled, dummy, modem, nullmodem, directserial.\n#          Additional parameters must be in the same line in the form of\n#          parameter:value. Parameter for all types is irq (optional).\n#          for directserial: realport (required), rxdelay (optional).\n#                           (realport:COM1 realport:ttyS0).\n#          for modem: listenport (optional).\n#          for nullmodem: server, rxdelay, txdelay, telnet, usedtr,\n#                         transparent, port, inhsocket (all optional).\n#          Example: serial1=modem listenport:5000\n#          Possible values: dummy, disabled, modem, nullmodem, directserial.\n# serial2: see serial1\n#          Possible values: dummy, disabled, modem, nullmodem, directserial.\n# serial3: see serial1\n#          Possible values: dummy, disabled, modem, nullmodem, directserial.\n# serial4: see serial1\n#          Possible values: dummy, disabled, modem, nullmodem, directserial.\n\nserial1=dummy\nserial2=dummy\nserial3=disabled\nserial4=disabled\n\n[dos]\n#            xms: Enable XMS support.\n#            ems: Enable EMS support.\n#            umb: Enable UMB support.\n# keyboardlayout: Language code of the keyboard layout (or none).\n\nxms=true\nems=true\numb=true\nkeyboardlayout=auto\n\n[ipx]\n# ipx: Enable ipx over UDP/IP emulation.\n\nipx=false\n\n[autoexec]\n# Lines in this section will be run at startup.\n# You can put your MOUNT lines here.\n@echo off\n\n\n";
-},{}],"../node_modules/js-dos/js-dos-ts/js-dos-cache-noop.ts":[function(require,module,exports) {
+},{}],"Xhr.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var CacheNoop =
-/** @class */
-function () {
-  function CacheNoop() {}
-
-  CacheNoop.prototype.put = function (key, data, onflush) {// nothing
-  };
-
-  CacheNoop.prototype.get = function (key, ondata, onerror) {
-    onerror("Cache is not supported on this host");
-  };
-
-  CacheNoop.prototype.forEach = function (each, onend) {
-    onend();
-  };
-
-  return CacheNoop;
-}();
-
-exports.default = CacheNoop;
-},{}],"../node_modules/js-dos/js-dos-ts/js-dos-xhr.ts":[function(require,module,exports) {
-"use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var js_dos_cache_noop_1 = __importDefault(require("./js-dos-cache-noop")); // * `method` - "GET" | "POST"
-// * `success` - callback when resource is downloaded
-// * `progress` - callback for progress
-// * `fail` - fail callback
-// * `data` - data for POST request, should typeof `application/x-www-form-urlencoded`
-// * `responseType` - XMLHttpRequestResponseType
-// Class Xhr does not have any public methods
-
 
 var Xhr =
 /** @class */
 function () {
   function Xhr(url, options) {
-    var _this = this;
-
     this.xhr = null;
     this.total = 0;
     this.loaded = 0;
     this.resource = url;
     this.options = options;
     this.options.method = options.method || "GET";
-    this.cache = options.cache || new js_dos_cache_noop_1.default();
 
     if (this.options.method === "GET") {
-      this.cache.get(this.resource, function (data) {
-        if (_this.options.success !== undefined) {
-          _this.options.success(data);
-        }
-      }, function () {
-        _this.makeHttpRequest();
-      });
+      this.makeHttpRequest();
     }
   }
 
@@ -39623,10 +39572,6 @@ function () {
             this.options.progress(total, total);
           }
 
-          if (this.options.method === "GET" && this.resource.indexOf("?") < 0) {
-            this.cache.put(this.resource, xhr.response, function () {});
-          }
-
           return this.options.success(xhr.response);
         }
       } else if (this.options.fail) {
@@ -39640,7 +39585,7 @@ function () {
 }();
 
 exports.Xhr = Xhr;
-},{"./js-dos-cache-noop":"../node_modules/js-dos/js-dos-ts/js-dos-cache-noop.ts"}],"DosWorkerWrapper.ts":[function(require,module,exports) {
+},{}],"DosWorkerWrapper.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -39800,21 +39745,13 @@ var __spreadArrays = this && this.__spreadArrays || function () {
   return r;
 };
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var utils_1 = require("./utils");
 
-var js_dos_xhr_1 = require("js-dos/js-dos-ts/js-dos-xhr");
-
-var js_dos_cache_noop_1 = __importDefault(require("js-dos/js-dos-ts/js-dos-cache-noop"));
+var Xhr_1 = require("./Xhr");
 
 var DosWorkerWrapper =
 /** @class */
@@ -40090,8 +40027,7 @@ function () {
         return [2
         /*return*/
         , new Promise(function (resolve, reject) {
-          new js_dos_xhr_1.Xhr(url, {
-            cache: new js_dos_cache_noop_1.default(),
+          new Xhr_1.Xhr(url, {
             responseType: "arraybuffer",
             fail: function fail(msg) {
               return reject(msg);
@@ -40236,7 +40172,7 @@ function () {
 }();
 
 exports.default = DosWorkerWrapper;
-},{"./utils":"utils.ts","js-dos/js-dos-ts/js-dos-xhr":"../node_modules/js-dos/js-dos-ts/js-dos-xhr.ts","js-dos/js-dos-ts/js-dos-cache-noop":"../node_modules/js-dos/js-dos-ts/js-dos-cache-noop.ts"}],"VRDos.ts":[function(require,module,exports) {
+},{"./utils":"utils.ts","./Xhr":"Xhr.ts"}],"VRDos.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -40493,6 +40429,7 @@ function () {
         ctx.fillText(text, 40, 40);
       }
 
+      this.dosTexture.needsUpdate = true;
       this.isLoading = loading;
     } else {
       this.isLoading = loading;
@@ -40713,9 +40650,9 @@ function () {
     }
   };
 
-  VRDos.prototype.run = function (domElement) {
+  VRDos.prototype.init = function (domElement) {
     return __awaiter(this, void 0, void 0, function () {
-      var computerMonitorHeight, cameraPosition, fov, orbitalTarget, roomGLTF, roomMesh, roomScreenMesh;
+      var computerMonitorHeight, cameraPosition, fov, roomGLTF, roomMesh, roomScreenMesh;
 
       var _this = this;
 
@@ -40742,8 +40679,7 @@ function () {
             this.vrUser.position.set(0, 0, 0);
             this.vrUser.add(this.camera);
             this.scene.add(this.vrUser);
-            orbitalTarget = new three_1.Vector3(0, computerMonitorHeight, 0);
-            this.createOrbitControls(this.camera, this.renderer.domElement, orbitalTarget); // Adjust VR view height
+            this.createOrbitControls(this.camera, this.renderer.domElement, new three_1.Vector3(0, computerMonitorHeight, 0)); // Adjust VR view height
             // @ts-ignore
 
             this.renderer.xr.addEventListener('sessionstart', function () {
@@ -40806,29 +40742,40 @@ function () {
           case 4:
             this.renderer.setAnimationLoop(this.render.bind(this));
             this.initialized = true;
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
+  };
 
-            (function () {
-              return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                  switch (_a.label) {
-                    case 0:
-                      this.setLoading(true, "Please wait...");
-                      return [4
-                      /*yield*/
-                      , this.playIntro()];
+  VRDos.prototype.run = function (archiveUrl, commands) {
+    if (commands === void 0) {
+      commands = [];
+    }
 
-                    case 1:
-                      _a.sent();
+    return __awaiter(this, void 0, void 0, function () {
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            this.setLoading(true, "Please wait...");
+            return [4
+            /*yield*/
+            , this.playIntro()];
 
-                      this.bootDosGame();
-                      return [2
-                      /*return*/
-                      ];
-                  }
-                });
-              });
-            })();
+          case 1:
+            _a.sent();
 
+            this.setLoading(true, "Booting " + archiveUrl + "...");
+            return [4
+            /*yield*/
+            , this.dos.run(archiveUrl, commands)];
+
+          case 2:
+            _a.sent();
+
+            this.setLoading(false);
             return [2
             /*return*/
             ];
@@ -40874,33 +40821,6 @@ function () {
       });
     });
     return promise;
-  };
-
-  VRDos.prototype.bootDosGame = function (archiveUrl) {
-    if (archiveUrl === void 0) {
-      archiveUrl = 'dos-hdd.zip';
-    }
-
-    return __awaiter(this, void 0, void 0, function () {
-      return __generator(this, function (_a) {
-        switch (_a.label) {
-          case 0:
-            this.setLoading(true, "Booting " + archiveUrl);
-            return [4
-            /*yield*/
-            , this.dos.run(archiveUrl, ['-c', 'c:\\doszip\\dz.exe'])];
-
-          case 1:
-            _a.sent(); //
-
-
-            this.setLoading(false);
-            return [2
-            /*return*/
-            ];
-        }
-      });
-    });
   };
 
   VRDos.prototype.fixTextureSize = function (canvas, texture) {
@@ -49831,9 +49751,11 @@ var VRDos_1 = __importDefault(require("./VRDos"));
 
 var webxr_polyfill_1 = __importDefault(require("webxr-polyfill"));
 
+var ts_keycode_enum_1 = require("ts-keycode-enum");
+
 (function () {
   return __awaiter(void 0, void 0, void 0, function () {
-    var container;
+    var container, vrDos, controls, virtualButtons;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -49841,12 +49763,54 @@ var webxr_polyfill_1 = __importDefault(require("webxr-polyfill"));
           new webxr_polyfill_1.default();
           return [4
           /*yield*/
-          , new VRDos_1.default().run(container)];
+          , new VRDos_1.default()];
 
         case 1:
+          vrDos = _a.sent();
+          return [4
+          /*yield*/
+          , vrDos.init(container)];
+
+        case 2:
           _a.sent();
 
           document.body.classList.remove('loading');
+          return [4
+          /*yield*/
+          , vrDos.run('dos-hdd.zip', ['-c', 'c:\\doszip\\dz.exe'])];
+
+        case 3:
+          _a.sent();
+
+          document.body.classList.add('ready');
+          controls = document.getElementById('controls');
+          virtualButtons = {
+            '←': [ts_keycode_enum_1.Key.LeftArrow],
+            '↑': [ts_keycode_enum_1.Key.UpArrow],
+            '↓': [ts_keycode_enum_1.Key.DownArrow],
+            '→': [ts_keycode_enum_1.Key.RightArrow],
+            'Ent': [ts_keycode_enum_1.Key.Enter],
+            'Spc': [ts_keycode_enum_1.Key.Space],
+            'Ctr': [ts_keycode_enum_1.Key.Ctrl],
+            'Sft': [ts_keycode_enum_1.Key.Shift],
+            'Esc': [ts_keycode_enum_1.Key.Ctrl, ts_keycode_enum_1.Key.Q, ts_keycode_enum_1.Key.X, ts_keycode_enum_1.Key.Escape]
+          };
+          Object.keys(virtualButtons).forEach(function (keyName) {
+            var button = document.createElement('button');
+            var keys = virtualButtons[keyName];
+            button.innerHTML = keyName;
+            button.addEventListener('mousedown', function () {
+              return keys.forEach(function (key) {
+                return vrDos.emulateKeyEvent(key, 'keydown');
+              });
+            });
+            button.addEventListener('mouseup', function () {
+              return keys.forEach(function (key) {
+                return vrDos.emulateKeyEvent(key, 'keyup');
+              });
+            });
+            controls === null || controls === void 0 ? void 0 : controls.appendChild(button);
+          });
           return [2
           /*return*/
           ];
@@ -49854,7 +49818,7 @@ var webxr_polyfill_1 = __importDefault(require("webxr-polyfill"));
     });
   });
 })();
-},{"./VRDos":"VRDos.ts","webxr-polyfill":"../node_modules/webxr-polyfill/build/webxr-polyfill.module.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./VRDos":"VRDos.ts","webxr-polyfill":"../node_modules/webxr-polyfill/build/webxr-polyfill.module.js","ts-keycode-enum":"../node_modules/ts-keycode-enum/dist/js/Key.enum.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
