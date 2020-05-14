@@ -6,7 +6,7 @@ This is a experimental "PC running DOS" emulator inside a VR environment.
 
 The VR environment was built using Three.js and the emulator is rendered inside the world using CanvasTexture.
 
-To achive proper fps (main thread needed more power for VR rendering) I modified js-dos to be able to compile it as a Web Worker.
+To achive proper fps (main thread needs a lot of cpu for VR rendering) I modified js-dos to be able to compile it as a Web Worker.
 
 
 
