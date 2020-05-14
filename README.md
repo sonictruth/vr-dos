@@ -1,4 +1,4 @@
-# Virtual Reality DOS (WIP)
+# Virtual Reality DOS PoC
 
 http://sonictruth.github.io/vr-dos/
 
