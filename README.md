@@ -2,7 +2,7 @@
 
 http://sonictruth.github.io/vr-dos/
 
-This is a experimental PC running DOS emulator inside a VR environment.
+This is a experimental "PC running DOS" emulator inside a VR environment.
 
 To achive this I modified js-dos to be able to compile it as a Web Worker.
 This way the main thread will have enough power for VR rendering.
