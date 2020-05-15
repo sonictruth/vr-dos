@@ -184,9 +184,6 @@ class VRDos {
 
     if (!this.isLoading) {
       this.fixTextureSize(this.dosCanvas, this.dosTexture);
-      this.dosTexture.minFilter = LinearFilter;
-      this.dosTexture.magFilter = NearestFilter;
-      this.dosTexture.anisotropy = 8;
       this.processGamepadsInputs();
     }
 
@@ -408,6 +405,9 @@ class VRDos {
     } else {
       throw new Error('Screen mesh not found' + this.screenMeshName);
     }
+    // this.dosTexture.minFilter = LinearFilter;
+    // this.dosTexture.magFilter = NearestFilter;
+    // this.dosTexture.anisotropy = 8;
 
     this.renderer.setAnimationLoop(this.render.bind(this));
     this.initialized = true;
