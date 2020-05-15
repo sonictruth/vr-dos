@@ -21,6 +21,8 @@ import {
   LoopOnce,
   AnimationClip,
   Group,
+  LinearFilter,
+  NearestFilter
 } from 'three';
 
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
@@ -182,6 +184,9 @@ class VRDos {
 
     if (!this.isLoading) {
       this.fixTextureSize(this.dosCanvas, this.dosTexture);
+      this.dosTexture.minFilter = LinearFilter;
+      this.dosTexture.magFilter = NearestFilter;
+      this.dosTexture.anisotropy = 8;
       this.processGamepadsInputs();
     }
 
