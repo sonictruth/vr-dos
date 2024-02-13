@@ -1,4 +1,4 @@
-# Virtual Reality DOS PoC
+# MS-DOS Virtual Reality 
 
 http://sonictruth.github.io/vr-dos/
 
