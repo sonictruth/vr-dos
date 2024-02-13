@@ -2,23 +2,18 @@
 
 http://sonictruth.github.io/vr-dos/
 
-This is an experimental "PC running DOS" emulator inside a VR environment.
-
-The VR environment was built using Three.js and the emulator is rendered inside the world using CanvasTexture.
-
-To achive proper fps (main thread needs a lot of cpu for VR rendering) I modified js-dos to be able to compile it as a Web Worker.
-
-
+This is an experimental emulator for a "PC running DOS" within a VR environment.
+The VR environment was constructed using Three.js, and the emulator was rendered within this world using CanvasTexture.
+The main challenge was achieving good FPS, as the main thread required a significant amount of CPU for VR rendering.
+Therefore, I modified JS-Dos to enable its compilation as a Web Worker.
 
 ![](demo.gif)
 
 ## Keys
 
-On PC you can use your keyboard to control the emulator and mouse to look around.
-
-On mobile you can use the top right virtual keys.
-
-In VR this are the default mappings (tested with Oculus Quest):
+You can use your keyboard to control the emulator on your PC, and your mouse to look around.
+You can use the virtual keys at the top right on mobile.
+These are the default mappings in VR (tested with Oculus Quest):
 
 0: [Key.Enter], // Trigger
 
@@ -38,6 +33,7 @@ In VR this are the default mappings (tested with Oculus Quest):
 - Optimize rendering loops, gamepad handling
 
 ## Credits
-3D Model  https://sketchfab.com/railek
-
-js-dos https://js-dos.com/
+3D Model 
+https://sketchfab.com/railek
+js-dos
+https://js-dos.com/
