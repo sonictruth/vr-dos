@@ -23,7 +23,7 @@
   "dependencies": {
     "@webxr-input-profiles/motion-controllers": "^1.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.115.0",
+    "three": "^0.137.0",
     "ts-keycode-enum": "^1.0.6",
     "webxr-polyfill": "^2.0.2"
   }
