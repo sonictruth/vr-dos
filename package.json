@@ -15,7 +15,7 @@
     "@types/node": "^13.13.4",
     "@types/stats.js": "^0.17.0",
     "gh-pages": "^2.2.0",
-    "parcel": "^1.12.4",
+    "parcel": "^2.8.2",
     "parcel-plugin-static-files-copy": "^2.3.1",
     "shx": "^0.3.2",
     "typescript": "^3.8.3"
